@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="CampSite"
+        android:title="•"
         android:id="@+id/campSiteFragment"
         android:icon="@drawable/ic_camp"/>
     <item
-        android:title="Booking"
+        android:title="•"
         android:id="@+id/bookingFragment"
         android:icon="@drawable/ic_booking"
         />
     <item
-        android:title="Inbox"
+        android:title="•"
         android:id="@+id/inboxFragment"
-        android:icon="@drawable/ic_message"/>
+        android:icon="@drawable/ic_chat"/>
     <item
-        android:title="Profile"
+        android:title="•"
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_profile"/>
 </menu>

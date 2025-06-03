@@ -1,0 +1,7 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected state - icon color when selected (usually darker color) -->
+    <item android:state_checked="true" android:color="#333333"/>
+
+    <!-- Default state - icon color when not selected -->
+    <item android:color="@android:color/white"/>
+</selector>
