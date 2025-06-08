@@ -4,6 +4,10 @@
         <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="h1">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     
     <style name="MenuItemStyle">
         <item name="android:layout_width">match_parent</item>
