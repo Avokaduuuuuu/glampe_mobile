@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">glampe_mobile</string>
+    <string name="back">Back</string>
+    <string name="chat_name">User</string>
+    <string name="more_options">More options</string>
+    <string name="attach_file">Attach file</string>
+    <string name="enter_message">Enter message…</string>
 </resources>
