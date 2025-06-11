@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +19,20 @@ import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.viewModel.BottomNavViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private BottomNavViewModel bottomNavViewModel;
     private boolean isAnimating = false;
+
+    Set<Integer> destinationsWithoutBottomNav = new HashSet<>(Arrays.asList(
+            R.id.campSiteDetailFragment,
+            R.id.profileInfoFragment
+    ));
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
             bottomNavViewModel = new ViewModelProvider(this).get(BottomNavViewModel.class);
             bottomNavigationView = findViewById(R.id.bottom_navigation);
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (destinationsWithoutBottomNav.contains(destination.getId())){
+                    bottomNavigationView.setVisibility(View.GONE);
+                } else bottomNavigationView.setVisibility(View.VISIBLE);
+            });
             observeBottomNavVisibility();
         } else throw new IllegalStateException("NavHostFragment not found");
     }
