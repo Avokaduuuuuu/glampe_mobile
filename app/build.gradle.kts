@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.avocado.glampe_mobile"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,4 +52,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation("com.google.android.material:material:1.12.0")
 }

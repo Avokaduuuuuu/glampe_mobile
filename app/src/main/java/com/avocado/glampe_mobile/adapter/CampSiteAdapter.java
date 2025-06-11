@@ -3,9 +3,11 @@ package com.avocado.glampe_mobile.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.avocado.glampe_mobile.R;
@@ -15,9 +17,15 @@ import java.util.List;
 
 public class CampSiteAdapter extends RecyclerView.Adapter<CampSiteAdapter.CampSiteViewHolder> {
     private final List<CampSiteResponse> campSiteResponses;
+    private OnItemClickListener onItemClickListener;
 
-    public CampSiteAdapter(List<CampSiteResponse> campSiteResponses) {
+    public CampSiteAdapter(List<CampSiteResponse> campSiteResponses, OnItemClickListener onClick) {
         this.campSiteResponses = campSiteResponses;
+        this.onItemClickListener = onClick;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(CampSiteResponse campsite);
     }
 
     @NonNull
@@ -34,7 +42,11 @@ public class CampSiteAdapter extends RecyclerView.Adapter<CampSiteAdapter.CampSi
 
         holder.txName.setText(campSiteResponse.getName());
         holder.txAddress.setText(campSiteResponse.getAddress());
-
+        holder.cardCampSite.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onClick(campSiteResponse);
+            }
+        });
     }
 
     @Override
@@ -44,12 +56,14 @@ public class CampSiteAdapter extends RecyclerView.Adapter<CampSiteAdapter.CampSi
 
     public static class CampSiteViewHolder extends RecyclerView.ViewHolder {
         TextView txPlaceType, txName, txAddress, txPrice;
+        CardView cardCampSite;
         public CampSiteViewHolder(@NonNull View view) {
             super(view);
             txPlaceType = view.findViewById(R.id.txPlaceType);
             txName = view.findViewById(R.id.txName);
             txAddress = view.findViewById(R.id.txAddress);
             txPrice = view.findViewById(R.id.txPrice);
+            cardCampSite = view.findViewById(R.id.cardCampSite);
         }
     }
 }
