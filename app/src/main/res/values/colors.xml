@@ -234,4 +234,9 @@
     <color name="blue_700">#1976D2</color>
     <color name="blue_800">#1565C0</color>
     <color name="blue_900">#0D47A1</color>
+
+    <color name="text_primary">#FF1A1A1A</color>
+    <color name="text_secondary">#FF666666</color>
+    <color name="range_selection_bg_white">#4D000000</color>
+    <color name="drag_handle_color">#FFCCCCCC</color>
 </resources>

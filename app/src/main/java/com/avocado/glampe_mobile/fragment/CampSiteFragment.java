@@ -11,6 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +37,7 @@ public class CampSiteFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BottomNavViewModel bottomNavViewModel;
+    private NavController navController;
 
     @Nullable
     @Override
@@ -46,12 +50,18 @@ public class CampSiteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         bottomNavViewModel = new ViewModelProvider(requireActivity()).get(BottomNavViewModel.class);
+        navController = Navigation.findNavController(view);
         recyclerView = view.findViewById(R.id.recyclerView);
         NestedScrollView nestedScrollView = view.findViewById(R.id.nestedScrollView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
         List<CampSiteResponse> campSiteResponses = createMoreCampSites();
-        CampSiteAdapter campSiteAdapter = new CampSiteAdapter(campSiteResponses);
+        CampSiteAdapter campSiteAdapter = new CampSiteAdapter(campSiteResponses, new CampSiteAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(CampSiteResponse campsite) {
+                navController.navigate(R.id.action_campSiteFragment_to_campSiteDetailFragment);
+            }
+        });
         recyclerView.setAdapter(campSiteAdapter);
         setupNestedScrollListener(nestedScrollView);
     }
