@@ -8,172 +8,230 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<!-- Primary Brand Colors -->
-<color name="forest_green">#2E7D32</color>          <!-- Primary Forest Green -->
-<color name="forest_green_dark">#1B5E20</color>     <!-- Dark Forest Green -->
-<color name="forest_green_light">#66BB6A</color>    <!-- Light Forest Green -->
-<color name="forest_green_medium">#388E3C</color>   <!-- Medium Forest Green -->
+    <!-- Primary Brand Colors -->
+    <color name="forest_green">#2E7D32</color>          <!-- Primary Forest Green -->
+    <color name="forest_green_dark">#1B5E20</color>     <!-- Dark Forest Green -->
+    <color name="forest_green_light">#66BB6A</color>    <!-- Light Forest Green -->
+    <color name="forest_green_medium">#388E3C</color>   <!-- Medium Forest Green -->
 
-<!-- Secondary Colors -->
-<color name="campfire_orange">#FF8F00</color>        <!-- Campfire Orange -->
-<color name="campfire_orange_dark">#E65100</color>   <!-- Dark Orange -->
-<color name="campfire_orange_light">#FFB74D</color>  <!-- Light Orange -->
-<color name="campfire_orange_medium">#F57C00</color> <!-- Medium Orange -->
+    <!-- Secondary Colors -->
+    <color name="campfire_orange">#FF8F00</color>        <!-- Campfire Orange -->
+    <color name="campfire_orange_dark">#E65100</color>   <!-- Dark Orange -->
+    <color name="campfire_orange_light">#FFB74D</color>  <!-- Light Orange -->
+    <color name="campfire_orange_medium">#F57C00</color> <!-- Medium Orange -->
 
-<!-- Accent Colors -->
-<color name="lake_blue">#00BCD4</color>             <!-- Lake Blue -->
-<color name="lake_blue_dark">#0097A7</color>        <!-- Dark Lake Blue -->
-<color name="lake_blue_light">#4DD0E1</color>       <!-- Light Lake Blue -->
+    <!-- Accent Colors -->
+    <color name="lake_blue">#00BCD4</color>             <!-- Lake Blue -->
+    <color name="lake_blue_dark">#0097A7</color>        <!-- Dark Lake Blue -->
+    <color name="lake_blue_light">#4DD0E1</color>       <!-- Light Lake Blue -->
 
-<!-- Background Colors -->     <!-- White -->
-<color name="light_gray">#F5F5F5</color>            <!-- Light Gray -->
-<color name="very_light_gray">#FAFAFA</color>       <!-- Very Light Gray -->
-<color name="charcoal_black">#121212</color>        <!-- Dark Mode Background -->
-<color name="card_white">#FFFFFF</color>            <!-- Card Background -->
-<color name="overlay_black">#80000000</color>       <!-- Semi-transparent Black -->
+    <!-- Background Colors -->     <!-- White -->
+    <color name="light_gray">#F5F5F5</color>            <!-- Light Gray -->
+    <color name="very_light_gray">#FAFAFA</color>       <!-- Very Light Gray -->
+    <color name="charcoal_black">#121212</color>        <!-- Dark Mode Background -->
+    <color name="card_white">#FFFFFF</color>            <!-- Card Background -->
+    <color name="overlay_black">#80000000</color>       <!-- Semi-transparent Black -->
 
-<!-- Surface Colors -->
-<color name="surface_white">#FFFFFF</color>         <!-- Surface White -->
-<color name="surface_gray">#F3F4F6</color>          <!-- Surface Gray -->
-<color name="surface_dark">#1E1E1E</color>          <!-- Surface Dark -->
+    <!-- Surface Colors -->
+    <color name="surface_white">#FFFFFF</color>         <!-- Surface White -->
+    <color name="surface_gray">#F3F4F6</color>          <!-- Surface Gray -->
+    <color name="surface_dark">#1E1E1E</color>          <!-- Surface Dark -->
 
-<!-- Text Colors -->
-<color name="charcoal_gray">#212121</color>         <!-- Dark Gray -->
-<color name="medium_gray">#757575</color>           <!-- Medium Gray -->
-<color name="light_gray_text">#9E9E9E</color>       <!-- Light Gray -->
-<color name="white_text">#FFFFFF</color>            <!-- White Text -->
-<color name="hint_gray">#BDBDBD</color>             <!-- Hint Text -->
-<color name="disabled_gray">#E0E0E0</color>         <!-- Disabled Text -->
+    <!-- Text Colors -->
+    <color name="charcoal_gray">#212121</color>         <!-- Dark Gray -->
+    <color name="medium_gray">#757575</color>           <!-- Medium Gray -->
+    <color name="light_gray_text">#9E9E9E</color>       <!-- Light Gray -->
+    <color name="white_text">#FFFFFF</color>            <!-- White Text -->
+    <color name="hint_gray">#BDBDBD</color>             <!-- Hint Text -->
+    <color name="disabled_gray">#E0E0E0</color>         <!-- Disabled Text -->
 
-<!-- Status Colors -->
-<color name="success_green">#4CAF50</color>         <!-- Success Green -->
-<color name="success_green_light">#C8E6C9</color>   <!-- Light Success -->
-<color name="error_red">#F44336</color>             <!-- Error Red -->
-<color name="error_red_light">#FFCDD2</color>       <!-- Light Error -->
-<color name="warning_orange">#FF9800</color>        <!-- Warning Orange -->
-<color name="warning_orange_light">#FFE0B2</color>  <!-- Light Warning -->
-<color name="info_blue">#2196F3</color>             <!-- Info Blue -->
-<color name="info_blue_light">#BBDEFB</color>       <!-- Light Info -->
+    <!-- Status Colors -->
+    <color name="success_green">#4CAF50</color>         <!-- Success Green -->
+    <color name="success_green_light">#C8E6C9</color>   <!-- Light Success -->
+    <color name="error_red">#F44336</color>             <!-- Error Red -->
+    <color name="error_red_light">#FFCDD2</color>       <!-- Light Error -->
+    <color name="warning_orange">#FF9800</color>        <!-- Warning Orange -->
+    <color name="warning_orange_light">#FFE0B2</color>  <!-- Light Warning -->
+    <color name="info_blue">#2196F3</color>             <!-- Info Blue -->
+    <color name="info_blue_light">#BBDEFB</color>       <!-- Light Info -->
 
-<!-- Booking Status Colors -->
-<color name="confirmed_green">#4CAF50</color>       <!-- Confirmed Booking -->
-<color name="pending_orange">#FF9800</color>        <!-- Pending Booking -->
-<color name="cancelled_red">#F44336</color>         <!-- Cancelled Booking -->
-<color name="completed_blue">#2196F3</color>        <!-- Completed Booking -->
+    <!-- Booking Status Colors -->
+    <color name="confirmed_green">#4CAF50</color>       <!-- Confirmed Booking -->
+    <color name="pending_orange">#FF9800</color>        <!-- Pending Booking -->
+    <color name="cancelled_red">#F44336</color>         <!-- Cancelled Booking -->
+    <color name="completed_blue">#2196F3</color>        <!-- Completed Booking -->
 
-<!-- Rating Colors -->
-<color name="excellent_green">#4CAF50</color>       <!-- 4.5-5 stars -->
-<color name="good_light_green">#8BC34A</color>      <!-- 3.5-4.4 stars -->
-<color name="average_orange">#FF9800</color>        <!-- 2.5-3.4 stars -->
-<color name="poor_deep_orange">#FF5722</color>      <!-- 1.5-2.4 stars -->
-<color name="bad_red">#F44336</color>               <!-- 0-1.4 stars -->
-<color name="star_yellow">#FFC107</color>           <!-- Filled Star -->
-<color name="star_empty_gray">#E0E0E0</color>       <!-- Empty Star -->
+    <!-- Rating Colors -->
+    <color name="excellent_green">#4CAF50</color>       <!-- 4.5-5 stars -->
+    <color name="good_light_green">#8BC34A</color>      <!-- 3.5-4.4 stars -->
+    <color name="average_orange">#FF9800</color>        <!-- 2.5-3.4 stars -->
+    <color name="poor_deep_orange">#FF5722</color>      <!-- 1.5-2.4 stars -->
+    <color name="bad_red">#F44336</color>               <!-- 0-1.4 stars -->
+    <color name="star_yellow">#FFC107</color>           <!-- Filled Star -->
+    <color name="star_empty_gray">#E0E0E0</color>       <!-- Empty Star -->
 
-<!-- Price Colors -->
-<color name="price_green">#2E7D32</color>           <!-- Price Green -->
-<color name="discount_red">#F44336</color>          <!-- Discount Red -->
-<color name="original_price_gray">#9E9E9E</color>   <!-- Original Price (Strikethrough) -->
+    <!-- Price Colors -->
+    <color name="price_green">#2E7D32</color>           <!-- Price Green -->
+    <color name="discount_red">#F44336</color>          <!-- Discount Red -->
+    <color name="original_price_gray">#9E9E9E</color>   <!-- Original Price (Strikethrough) -->
 
-<!-- Bottom Navigation Colors -->
-<color name="nav_selected_green">#2E7D32</color>    <!-- Selected Tab -->
-<color name="nav_unselected_gray">#9E9E9E</color>   <!-- Unselected Tab -->
-<color name="nav_background_white">#FFFFFF</color>  <!-- Bottom Nav Background -->
-<color name="nav_badge_red">#F44336</color>         <!-- Notification Badge -->
+    <!-- Bottom Navigation Colors -->
+    <color name="nav_selected_green">#2E7D32</color>    <!-- Selected Tab -->
+    <color name="nav_unselected_gray">#9E9E9E</color>   <!-- Unselected Tab -->
+    <color name="nav_background_white">#FFFFFF</color>  <!-- Bottom Nav Background -->
+    <color name="nav_badge_red">#F44336</color>         <!-- Notification Badge -->
 
-<!-- Button Colors -->
-<color name="button_primary_green">#2E7D32</color>         <!-- Primary Button -->
-<color name="button_primary_green_pressed">#1B5E20</color> <!-- Primary Button Pressed -->
-<color name="button_secondary_orange">#FF8F00</color>      <!-- Secondary Button -->
-<color name="button_secondary_orange_pressed">#E65100</color><!-- Secondary Button Pressed -->
-<color name="button_outlined_white">#FFFFFF</color>        <!-- Outlined Button Background -->
-<color name="button_outlined_border_green">#2E7D32</color> <!-- Outlined Button Border -->
-<color name="button_text_white">#FFFFFF</color>            <!-- Button Text -->
-<color name="button_disabled_gray">#E0E0E0</color>         <!-- Disabled Button -->
-<color name="button_disabled_text_gray">#BDBDBD</color>    <!-- Disabled Button Text -->
+    <!-- Button Colors -->
+    <color name="button_primary_green">#2E7D32</color>         <!-- Primary Button -->
+    <color name="button_primary_green_pressed">#1B5E20</color> <!-- Primary Button Pressed -->
+    <color name="button_secondary_orange">#FF8F00</color>      <!-- Secondary Button -->
+    <color name="button_secondary_orange_pressed">#E65100</color><!-- Secondary Button Pressed -->
+    <color name="button_outlined_white">#FFFFFF</color>        <!-- Outlined Button Background -->
+    <color name="button_outlined_border_green">#2E7D32</color> <!-- Outlined Button Border -->
+    <color name="button_text_white">#FFFFFF</color>            <!-- Button Text -->
+    <color name="button_disabled_gray">#E0E0E0</color>         <!-- Disabled Button -->
+    <color name="button_disabled_text_gray">#BDBDBD</color>    <!-- Disabled Button Text -->
 
-<!-- Input Field Colors -->
-<color name="input_background_white">#FFFFFF</color>       <!-- Input Background -->
-<color name="input_border_gray">#E0E0E0</color>            <!-- Input Border -->
-<color name="input_border_focused_green">#2E7D32</color>   <!-- Focused Input Border -->
-<color name="input_text_dark">#212121</color>              <!-- Input Text -->
-<color name="input_hint_gray">#9E9E9E</color>              <!-- Input Hint -->
-<color name="input_error_red">#F44336</color>              <!-- Input Error -->
+    <!-- Input Field Colors -->
+    <color name="input_background_white">#FFFFFF</color>       <!-- Input Background -->
+    <color name="input_border_gray">#E0E0E0</color>            <!-- Input Border -->
+    <color name="input_border_focused_green">#2E7D32</color>   <!-- Focused Input Border -->
+    <color name="input_text_dark">#212121</color>              <!-- Input Text -->
+    <color name="input_hint_gray">#9E9E9E</color>              <!-- Input Hint -->
+    <color name="input_error_red">#F44336</color>              <!-- Input Error -->
 
-<!-- Card Colors -->
-<color name="card_background_white">#FFFFFF</color>        <!-- Card Background -->
-<color name="card_shadow_gray">#1A000000</color>           <!-- Card Shadow -->
-<color name="card_border_light_gray">#F0F0F0</color>       <!-- Card Border -->
-<color name="card_featured_light_green">#E8F5E8</color>    <!-- Featured Card Background -->
+    <!-- Card Colors -->
+    <color name="card_background_white">#FFFFFF</color>        <!-- Card Background -->
+    <color name="card_shadow_gray">#1A000000</color>           <!-- Card Shadow -->
+    <color name="card_border_light_gray">#F0F0F0</color>       <!-- Card Border -->
+    <color name="card_featured_light_green">#E8F5E8</color>    <!-- Featured Card Background -->
 
-<!-- Badge Colors -->
-<color name="badge_new_green">#4CAF50</color>              <!-- New Badge -->
-<color name="badge_popular_orange">#FF9800</color>         <!-- Popular Badge -->
-<color name="badge_featured_blue">#2196F3</color>          <!-- Featured Badge -->
-<color name="badge_sold_out_red">#F44336</color>           <!-- Sold Out Badge -->
+    <!-- Badge Colors -->
+    <color name="badge_new_green">#4CAF50</color>              <!-- New Badge -->
+    <color name="badge_popular_orange">#FF9800</color>         <!-- Popular Badge -->
+    <color name="badge_featured_blue">#2196F3</color>          <!-- Featured Badge -->
+    <color name="badge_sold_out_red">#F44336</color>           <!-- Sold Out Badge -->
 
-<!-- Wishlist Colors -->
-<color name="heart_filled_red">#F44336</color>             <!-- Filled Heart -->
-<color name="heart_empty_gray">#E0E0E0</color>             <!-- Empty Heart -->
+    <!-- Wishlist Colors -->
+    <color name="heart_filled_red">#F44336</color>             <!-- Filled Heart -->
+    <color name="heart_empty_gray">#E0E0E0</color>             <!-- Empty Heart -->
 
-<!-- Chat Colors -->
-<color name="chat_sent_green">#2E7D32</color>              <!-- Sent Message -->
-<color name="chat_received_gray">#F5F5F5</color>           <!-- Received Message -->
-<color name="chat_timestamp_gray">#9E9E9E</color>          <!-- Message Timestamp -->
-<color name="chat_online_green">#4CAF50</color>            <!-- Online Status -->
-<color name="chat_offline_gray">#9E9E9E</color>            <!-- Offline Status -->
+    <!-- Chat Colors -->
+    <color name="chat_sent_green">#2E7D32</color>              <!-- Sent Message -->
+    <color name="chat_received_gray">#F5F5F5</color>           <!-- Received Message -->
+    <color name="chat_timestamp_gray">#9E9E9E</color>          <!-- Message Timestamp -->
+    <color name="chat_online_green">#4CAF50</color>            <!-- Online Status -->
+    <color name="chat_offline_gray">#9E9E9E</color>            <!-- Offline Status -->
 
-<!-- Divider Colors -->
-<color name="divider_light_gray">#E0E0E0</color>           <!-- Standard Divider -->
-<color name="divider_very_light_gray">#F5F5F5</color>      <!-- Light Divider -->
-<color name="divider_medium_gray">#BDBDBD</color>          <!-- Dark Divider -->
+    <!-- Divider Colors -->
+    <color name="divider_light_gray">#E0E0E0</color>           <!-- Standard Divider -->
+    <color name="divider_very_light_gray">#F5F5F5</color>      <!-- Light Divider -->
+    <color name="divider_medium_gray">#BDBDBD</color>          <!-- Dark Divider -->
 
-<!-- Ripple Effects -->
-<color name="ripple_light_black">#20000000</color>         <!-- Light Ripple -->
-<color name="ripple_white">#40FFFFFF</color>               <!-- Dark Ripple -->
-<color name="ripple_primary_green">#202E7D32</color>       <!-- Primary Color Ripple -->
+    <!-- Ripple Effects -->
+    <color name="ripple_light_black">#20000000</color>         <!-- Light Ripple -->
+    <color name="ripple_white">#40FFFFFF</color>               <!-- Dark Ripple -->
+    <color name="ripple_primary_green">#202E7D32</color>       <!-- Primary Color Ripple -->
 
-<!-- Gradient Colors -->
-<color name="gradient_start_green">#2E7D32</color>         <!-- Gradient Start -->
-<color name="gradient_end_light_green">#66BB6A</color>     <!-- Gradient End -->
-<color name="gradient_overlay_start_black">#80000000</color><!-- Overlay Start -->
-<color name="gradient_overlay_end_transparent">#00000000</color> <!-- Overlay End -->
+    <!-- Gradient Colors -->
+    <color name="gradient_start_green">#2E7D32</color>         <!-- Gradient Start -->
+    <color name="gradient_end_light_green">#66BB6A</color>     <!-- Gradient End -->
+    <color name="gradient_overlay_start_black">#80000000</color><!-- Overlay Start -->
+    <color name="gradient_overlay_end_transparent">#00000000</color> <!-- Overlay End -->
 
-<!-- Map Colors -->
-<color name="map_marker_red">#F44336</color>               <!-- Map Marker -->
-<color name="map_route_blue">#2196F3</color>               <!-- Route Line -->
-<color name="map_cluster_orange">#FF9800</color>           <!-- Marker Cluster -->
+    <!-- Map Colors -->
+    <color name="map_marker_red">#F44336</color>               <!-- Map Marker -->
+    <color name="map_route_blue">#2196F3</color>               <!-- Route Line -->
+    <color name="map_cluster_orange">#FF9800</color>           <!-- Marker Cluster -->
 
-<!-- Calendar Colors -->
-<color name="calendar_available_green">#4CAF50</color>     <!-- Available Date -->
-<color name="calendar_booked_red">#F44336</color>          <!-- Booked Date -->
-<color name="calendar_selected_dark_green">#2E7D32</color> <!-- Selected Date -->
-<color name="calendar_today_orange">#FF9800</color>        <!-- Today -->
+    <!-- Calendar Colors -->
+    <color name="calendar_available_green">#4CAF50</color>     <!-- Available Date -->
+    <color name="calendar_booked_red">#F44336</color>          <!-- Booked Date -->
+    <color name="calendar_selected_dark_green">#2E7D32</color> <!-- Selected Date -->
+    <color name="calendar_today_orange">#FF9800</color>        <!-- Today -->
 
-<!-- Filter Colors -->
-<color name="filter_selected_green">#2E7D32</color>        <!-- Selected Filter -->
-<color name="filter_unselected_gray">#E0E0E0</color>       <!-- Unselected Filter -->
-<color name="filter_text_selected_white">#FFFFFF</color>   <!-- Selected Filter Text -->
-<color name="filter_text_unselected_gray">#757575</color>  <!-- Unselected Filter Text -->
+    <!-- Filter Colors -->
+    <color name="filter_selected_green">#2E7D32</color>        <!-- Selected Filter -->
+    <color name="filter_unselected_gray">#E0E0E0</color>       <!-- Unselected Filter -->
+    <color name="filter_text_selected_white">#FFFFFF</color>   <!-- Selected Filter Text -->
+    <color name="filter_text_unselected_gray">#757575</color>  <!-- Unselected Filter Text -->
 
-<!-- Loading Colors -->
-<color name="loading_background_white">#80FFFFFF</color>   <!-- Loading Overlay -->
-<color name="loading_spinner_green">#2E7D32</color>       <!-- Loading Spinner -->
+    <!-- Loading Colors -->
+    <color name="loading_background_white">#80FFFFFF</color>   <!-- Loading Overlay -->
+    <color name="loading_spinner_green">#2E7D32</color>       <!-- Loading Spinner -->
 
-<!-- Dark Theme Colors (Night Mode) -->
-<color name="dark_primary_light_green">#66BB6A</color>     <!-- Dark Mode Primary -->
-<color name="dark_primary_variant_green">#4CAF50</color>   <!-- Dark Mode Primary Variant -->
-<color name="dark_secondary_light_orange">#FFB74D</color>  <!-- Dark Mode Secondary -->
-<color name="dark_background_black">#121212</color>        <!-- Dark Mode Background -->
-<color name="dark_surface_gray">#1E1E1E</color>            <!-- Dark Mode Surface -->
-<color name="dark_text_primary_white">#FFFFFF</color>      <!-- Dark Mode Primary Text -->
-<color name="dark_text_secondary_white">#B3FFFFFF</color>  <!-- Dark Mode Secondary Text -->
+    <!-- Dark Theme Colors (Night Mode) -->
+    <color name="dark_primary_light_green">#66BB6A</color>     <!-- Dark Mode Primary -->
+    <color name="dark_primary_variant_green">#4CAF50</color>   <!-- Dark Mode Primary Variant -->
+    <color name="dark_secondary_light_orange">#FFB74D</color>  <!-- Dark Mode Secondary -->
+    <color name="dark_background_black">#121212</color>        <!-- Dark Mode Background -->
+    <color name="dark_surface_gray">#1E1E1E</color>            <!-- Dark Mode Surface -->
+    <color name="dark_text_primary_white">#FFFFFF</color>      <!-- Dark Mode Primary Text -->
+    <color name="dark_text_secondary_white">#B3FFFFFF</color>  <!-- Dark Mode Secondary Text -->
 
-<!-- Common Colors -->
-<color name="transparent">#00000000</color>
-<color name="pure_white">#FFFFFF</color>
-<color name="pure_black">#000000</color>
-<color name="light_background_gray">#F5F5F5</color>
-<color name="medium_neutral_gray">#9E9E9E</color>
-<color name="dark_neutral_gray">#424242</color>
+    <!-- Common Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="pure_white">#FFFFFF</color>
+    <color name="pure_black">#000000</color>
+    <color name="light_background_gray">#F5F5F5</color>
+    <color name="medium_neutral_gray">#9E9E9E</color>
+    <color name="dark_neutral_gray">#424242</color>
+    <color name="red_50">#FFEBEE</color>
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_200">#EF9A9A</color>
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+    <color name="red_500">#F44336</color>
+    <color name="red_600">#E53935</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="red_800">#C62828</color>
+    <color name="red_900">#B71C1C</color>
+
+    <!-- ORANGE PALETTE - Light to Dark -->
+    <color name="orange_50">#FFF3E0</color>
+    <color name="orange_100">#FFE0B2</color>
+    <color name="orange_200">#FFCC80</color>
+    <color name="orange_300">#FFB74D</color>
+    <color name="orange_400">#FFA726</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="orange_600">#FB8C00</color>
+    <color name="orange_700">#F57C00</color>
+    <color name="orange_800">#EF6C00</color>
+    <color name="orange_900">#E65100</color>
+
+    <!-- YELLOW PALETTE - Light to Dark -->
+    <color name="yellow_50">#FFFDE7</color>
+    <color name="yellow_100">#FFF9C4</color>
+    <color name="yellow_200">#FFF59D</color>
+    <color name="yellow_300">#FFF176</color>
+    <color name="yellow_400">#FFEE58</color>
+    <color name="yellow_500">#FFEB3B</color>
+    <color name="yellow_600">#FDD835</color>
+    <color name="yellow_700">#F9A825</color>
+    <color name="yellow_800">#F57F17</color>
+    <color name="yellow_900">#FF6F00</color>
+
+    <!-- GREEN PALETTE - Light to Dark -->
+    <color name="green_50">#E8F5E8</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_200">#A5D6A7</color>
+    <color name="green_300">#81C784</color>
+    <color name="green_400">#66BB6A</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_600">#43A047</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_800">#2E7D32</color>
+    <color name="green_900">#1B5E20</color>
+
+    <!-- BLUE PALETTE - Light to Dark -->
+    <color name="blue_50">#E3F2FD</color>
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_300">#64B5F6</color>
+    <color name="blue_400">#42A5F5</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_600">#1E88E5</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_800">#1565C0</color>
+    <color name="blue_900">#0D47A1</color>
 </resources>
