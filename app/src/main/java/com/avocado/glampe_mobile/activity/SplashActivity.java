@@ -18,7 +18,7 @@ public class SplashActivity extends AppCompatActivity {
         navigateToMain();
     }
 
-    private void navigateToMain(){
+    private void navigateToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
