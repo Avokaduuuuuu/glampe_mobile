@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">glampe_mobile</string>
+    <string name="camp_quantity">Quantity: %1d camps</string>
 </resources>

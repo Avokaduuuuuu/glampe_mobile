@@ -35,6 +35,14 @@
         <item name="cornerSizeBottomRight">15dp</item>
     </style>
 
+    <style name="RoundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">15dp</item>
+        <item name="cornerSizeTopRight">15dp</item>
+        <item name="cornerSizeBottomLeft">15dp</item> <!-- Adjust as needed -->
+        <item name="cornerSizeBottomRight">15dp</item>
+    </style>
+
     <style name="CalendarDialogTheme" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
