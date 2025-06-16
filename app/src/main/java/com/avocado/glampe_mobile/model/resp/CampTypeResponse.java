@@ -26,4 +26,6 @@ public class CampTypeResponse {
     Integer campSiteId;
     String image;
     List<FacilityResponse> facilities;
+    @Builder.Default
+    Integer selectedQuantity = 0;
 }

@@ -6,11 +6,20 @@
     android:fitsSystemWindows="false">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:paddingBottom="120dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/headerImage"
                 android:layout_width="0dp"
@@ -35,33 +44,37 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/headerImage"
                 android:layout_marginTop="20dp"
                 android:paddingHorizontal="15dp"
-                android:orientation="vertical"
-                >
+                android:paddingBottom="20dp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Campsite Name"
-                    style="@style/h1"
-                    />
+                    style="@style/h1" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
+
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_star"
                         app:tint="@color/black" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="4.97"
                         style="h3"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,6 +84,7 @@
                         android:layout_marginStart="4dp"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -83,6 +97,7 @@
                     android:layout_height="55dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp">
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAbout"
                         android:layout_width="0dp"
@@ -95,8 +110,8 @@
                         app:cornerRadius="24dp"
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/light_gray"
-                        android:backgroundTint="@color/ripple_button"
-                        />
+                        android:backgroundTint="@color/ripple_button" />
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnOption"
                         android:layout_width="0dp"
@@ -109,8 +124,7 @@
                         app:cornerRadius="24dp"
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/light_gray"
-                        android:backgroundTint="@color/ripple_button"
-                        />
+                        android:backgroundTint="@color/ripple_button" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnReview"
@@ -123,26 +137,28 @@
                         app:cornerRadius="24dp"
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/light_gray"
-                        android:backgroundTint="@color/ripple_button"
-                        />
+                        android:backgroundTint="@color/ripple_button" />
                 </LinearLayout>
-                
+
                 <ViewFlipper
                     android:id="@+id/viewFlipper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp">
+
                     <LinearLayout
                         android:id="@+id/layoutAbout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:background="@drawable/border_layout"
                             android:padding="15dp">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -154,22 +170,25 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Explore Paris's remarkable blend of elegance and history, where iconic landmarks stand alongside charming cafés and beautiful gardens. Begin your unforgettable adventure at the Eiffel Tower, the tallest Read More..."/>
-
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_marginTop="10dp">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="What this place offers"
                                 style="@style/h1"/>
+
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/utilityRecyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
+
                             <com.google.android.material.button.MaterialButton
                                 android:layout_width="match_parent"
                                 android:layout_height="60dp"
@@ -179,50 +198,54 @@
                                 android:textColor="@color/black"
                                 app:strokeColor="@color/black"
                                 app:strokeWidth="2dp"/>
-
                         </LinearLayout>
-
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/layoutOption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
+                            android:id="@+id/date_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <LinearLayout
-                                android:id="@+id/date_layout"
-                                android:layout_width="0dp"
-                                android:layout_height="70dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/border_layout"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:foreground="?attr/selectableItemBackground"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_layout"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Date"
-                                    android:textSize="14sp"
-                                    android:textColor="#888888" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Date"
+                                android:textSize="14sp"
+                                android:textColor="#888888" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/check_in_date"
-                                    android:text="16 Jan, 2025"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#000000" />
-
-                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/check_in_date"
+                                android:text="16 Jan, 2025"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#000000" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/layoutCampType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewCampType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -230,17 +253,76 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-
                     </LinearLayout>
                 </ViewFlipper>
             </LinearLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Fixed Booking Section at Bottom -->
+    <LinearLayout
+        android:id="@+id/bookingSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/booking_section_bg"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="16dp"
+        android:translationZ="16dp">
 
+        <!-- Pricing Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+           \
+
+            <!-- Current Price -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$1,050"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="#3F52B4" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" per night"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Book Now Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBookNow"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:text="Book Now!"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#3F52B4"
+            app:cornerRadius="28dp"
+            android:paddingHorizontal="32dp"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
