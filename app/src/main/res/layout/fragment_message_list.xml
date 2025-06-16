@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".MessageListActivity">
+    android:background="#FFFFFF">
 
     <!-- Header -->
     <LinearLayout
@@ -60,9 +59,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        app:cardBackgroundColor="#F8F8F8"
         app:cardCornerRadius="20dp"
         app:cardElevation="2dp"
-        app:cardBackgroundColor="#F8F8F8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header">
@@ -79,8 +78,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_search"
                 android:contentDescription="Search icon"
+                android:src="@drawable/ic_search"
                 app:tint="#666666" />
 
             <EditText
@@ -90,10 +89,10 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:hint="Tìm kiếm tin nhắn..."
+                android:inputType="text"
                 android:textColor="#000000"
                 android:textColorHint="#666666"
-                android:textSize="16sp"
-                android:inputType="text" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -127,16 +126,16 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    app:cardBackgroundColor="#FFFFFF"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#FFFFFF">
+                    app:cardElevation="2dp">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_person"
+                        android:contentDescription="User avatar"
                         android:scaleType="centerCrop"
-                        android:contentDescription="User avatar" />
+                        android:src="@drawable/ic_personal" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -144,11 +143,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Bạn"
-                    android:textSize="12sp"
-                    android:textColor="#757575"
+                    android:ellipsize="end"
                     android:maxLines="1"
-                    android:ellipsize="end" />
+                    android:text="Bạn"
+                    android:textColor="#757575"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -164,23 +163,9 @@
         android:clipToPadding="false"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/active_users_scroll"
         tools:listitem="@layout/item_conversation" />
-
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:background="#FFFFFF"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@color/bottom_nav_color"
-        app:itemTextColor="@color/bottom_nav_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
