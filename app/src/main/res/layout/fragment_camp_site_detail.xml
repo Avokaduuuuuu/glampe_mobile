@@ -5,6 +5,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingAnimation"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_fileName="loading.json"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -20,8 +33,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
+
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/headerImage"
+                android:id="@+id/imageCampSite"
                 android:layout_width="0dp"
                 android:layout_height="350dp"
                 android:scaleType="centerCrop"
@@ -38,20 +53,22 @@
                 android:layout_height="40dp"
                 android:background="@drawable/favorite_button_background"
                 android:src="@drawable/ic_arrow_left"
-                app:layout_constraintTop_toTopOf="@id/headerImage"
+                app:layout_constraintTop_toTopOf="@id/imageCampSite"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_margin="16dp"/>
+                android:layout_margin="16dp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/headerImage"
+                app:layout_constraintTop_toBottomOf="@id/imageCampSite"
                 android:layout_marginTop="20dp"
                 android:paddingHorizontal="15dp"
                 android:paddingBottom="20dp"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvCampSiteName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Campsite Name"
@@ -86,6 +103,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvCampSiteAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tam Đảo, Vĩnh Phúc"

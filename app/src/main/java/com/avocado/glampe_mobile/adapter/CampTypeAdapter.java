@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.model.entity.PriceFormat;
-import com.avocado.glampe_mobile.model.resp.CampTypeResponse;
+import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
 //import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -101,7 +101,7 @@ public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTy
             btnIncrease.setOnClickListener(v -> {
                 if (currentCampType != null &&
                         currentCampType.getSelectedQuantity() < currentCampType.getQuantity() &&
-                        currentCampType.getStatus()) {
+                        !currentCampType.getIsDeleted()) {
 
                     int newQuantity = currentCampType.getSelectedQuantity() + 1;
                     currentCampType.setSelectedQuantity(newQuantity);
@@ -152,8 +152,8 @@ public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTy
             // Prices
             tvPrice.setText(PriceFormat.formatUsd(campTypeResponse.getPrice()));
 
-            if (campTypeResponse.getWeekendRate() != null && campTypeResponse.getWeekendRate() > 0) {
-                tvWeekendRate.setText("Weekend: " + PriceFormat.formatUsd(campTypeResponse.getWeekendRate()));
+            if (campTypeResponse.getWeekendPrice() != null && campTypeResponse.getWeekendPrice() > 0) {
+                tvWeekendRate.setText("Weekend: " + PriceFormat.formatUsd(campTypeResponse.getWeekendPrice()));
                 tvWeekendRate.setVisibility(View.VISIBLE);
             } else {
                 tvWeekendRate.setVisibility(View.GONE);
@@ -208,12 +208,12 @@ public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTy
 
                 // Enable/disable increase button
                 boolean canIncrease = currentCampType.getSelectedQuantity() < currentCampType.getQuantity()
-                        && currentCampType.getStatus();
+                        && !currentCampType.getIsDeleted();
                 btnIncrease.setEnabled(canIncrease);
                 btnIncrease.setAlpha(canIncrease ? 1.0f : 0.5f);
 
                 // Update card appearance based on availability
-                itemView.setAlpha(currentCampType.getStatus() ? 1.0f : 0.6f);
+                itemView.setAlpha(!currentCampType.getIsDeleted() ? 1.0f : 0.6f);
             }
         }
     }

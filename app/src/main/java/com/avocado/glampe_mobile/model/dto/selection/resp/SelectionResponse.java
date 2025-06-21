@@ -1,4 +1,4 @@
-package com.avocado.glampe_mobile.model.resp;
+package com.avocado.glampe_mobile.model.dto.selection.resp;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FacilityResponse {
+public class SelectionResponse {
     Integer id;
     String name;
     String description;
+    Double price;
     String image;
     Boolean status;
 }

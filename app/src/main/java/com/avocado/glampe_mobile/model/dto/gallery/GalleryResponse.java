@@ -1,4 +1,4 @@
-package com.avocado.glampe_mobile.model.resp;
+package com.avocado.glampe_mobile.model.dto.gallery;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ImageResponse {
+public class GalleryResponse {
     Integer id;
     String path;
 }

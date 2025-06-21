@@ -39,55 +39,55 @@
             android:layout_marginBottom="24dp" />
 
         <!-- Tab Layout -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_tab_container"
-            android:padding="4dp"
-            android:layout_marginBottom="32dp">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@drawable/bg_tab_container"-->
+<!--            android:padding="4dp"-->
+<!--            android:layout_marginBottom="32dp">-->
 
-            <TextView
-                android:id="@+id/tab_dates"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:text="Dates"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="normal"
-                android:gravity="center"
-                android:background="@drawable/bg_tab_selected"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/tab_dates"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="44dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Dates"-->
+<!--                android:textColor="@color/text_primary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="normal"-->
+<!--                android:gravity="center"-->
+<!--                android:background="@drawable/bg_tab_selected"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-            <TextView
-                android:id="@+id/tab_months"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:text="Months"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:background="@drawable/bg_tab_unselected"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/tab_months"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="44dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Months"-->
+<!--                android:textColor="@color/text_secondary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:gravity="center"-->
+<!--                android:background="@drawable/bg_tab_unselected"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-            <TextView
-                android:id="@+id/tab_flexible"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:text="Flexible"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:background="@drawable/bg_tab_unselected"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/tab_flexible"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="44dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Flexible"-->
+<!--                android:textColor="@color/text_secondary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:gravity="center"-->
+<!--                android:background="@drawable/bg_tab_unselected"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <!-- Calendar Header -->
         <LinearLayout
@@ -215,56 +215,56 @@
             android:nestedScrollingEnabled="false"
             tools:listitem="@layout/item_calendar_day" />
 
-        <!-- Duration Options -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="32dp"
-            android:gravity="start">
+<!--        &lt;!&ndash; Duration Options &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginBottom="32dp"-->
+<!--            android:gravity="start">-->
 
-            <TextView
-                android:id="@+id/btn_exact_dates"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="Exact dates"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:background="@drawable/bg_duration_selected"
-                android:layout_marginEnd="12dp"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/btn_exact_dates"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:text="Exact dates"-->
+<!--                android:textColor="@color/text_primary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingHorizontal="24dp"-->
+<!--                android:background="@drawable/bg_duration_selected"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-            <TextView
-                android:id="@+id/btn_plus_1_day"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="± 1 day"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:background="@drawable/bg_duration_unselected"
-                android:layout_marginEnd="12dp"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/btn_plus_1_day"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:text="± 1 day"-->
+<!--                android:textColor="@color/text_secondary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingHorizontal="24dp"-->
+<!--                android:background="@drawable/bg_duration_unselected"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-            <TextView
-                android:id="@+id/btn_plus_2_days"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="± 2 days"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:background="@drawable/bg_duration_unselected"
-                android:clickable="true"
-                android:focusable="true" />
+<!--            <TextView-->
+<!--                android:id="@+id/btn_plus_2_days"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:text="± 2 days"-->
+<!--                android:textColor="@color/text_secondary"-->
+<!--                android:textSize="16sp"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingHorizontal="24dp"-->
+<!--                android:background="@drawable/bg_duration_unselected"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <!-- Bottom Buttons -->
         <LinearLayout

@@ -1,4 +1,6 @@
-package com.avocado.glampe_mobile.model.resp;
+package com.avocado.glampe_mobile.model.dto.camptype.resp;
+
+import com.avocado.glampe_mobile.model.dto.facility.resp.FacilityResponse;
 
 import java.util.List;
 
@@ -19,10 +21,10 @@ public class CampTypeResponse {
     String type;
     Integer capacity;
     Double price;
-    Double weekendRate;
+    Double weekendPrice;
     String updatedAt;
     Integer quantity;
-    Boolean status;
+    Boolean isDeleted;
     Integer campSiteId;
     String image;
     List<FacilityResponse> facilities;

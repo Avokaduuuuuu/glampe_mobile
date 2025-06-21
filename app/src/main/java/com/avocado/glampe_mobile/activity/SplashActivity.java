@@ -15,11 +15,17 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        navigateToMain();
+        navigateToAuth();
     }
 
     private void navigateToMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToAuth(){
+        Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
         finish();
     }

@@ -6,4 +6,5 @@
     <string name="more_options">More options</string>
     <string name="attach_file">Attach file</string>
     <string name="enter_message">Enter message…</string>
+    <string name="price_per_night">%1s ~ %2s</string>
 </resources>
