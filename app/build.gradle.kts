@@ -8,6 +8,12 @@ android {
     namespace = "com.avocado.glampe_mobile"
     compileSdk = 35
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.avocado.glampe_mobile"
         minSdk = 26
@@ -17,7 +23,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders["MAPS_API_KEY"] = project.properties["MAPS_API_KEY"].toString()
+        manifestPlaceholders["MAPS_API_KEY"] = localProperties["MAPS_API_KEY"] as Any
 
     }
 
