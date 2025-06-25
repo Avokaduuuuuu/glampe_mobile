@@ -5,39 +5,56 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.adapter.CampSiteAdapter;
-import com.avocado.glampe_mobile.model.resp.CampSiteResponse;
-import com.avocado.glampe_mobile.model.resp.CampTypeResponse;
-import com.avocado.glampe_mobile.model.resp.FacilityResponse;
-import com.avocado.glampe_mobile.model.resp.ImageResponse;
-import com.avocado.glampe_mobile.model.resp.PlaceTypeResponse;
-import com.avocado.glampe_mobile.model.resp.SelectionResponse;
-import com.avocado.glampe_mobile.model.resp.UserResponse;
-import com.avocado.glampe_mobile.model.resp.UtilityResponse;
+import com.avocado.glampe_mobile.model.dto.campsite.filter.CampSiteFilterParams;
+import com.avocado.glampe_mobile.model.dto.campsite.resp.CampSiteResponse;
+import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
+import com.avocado.glampe_mobile.model.dto.facility.resp.FacilityResponse;
+import com.avocado.glampe_mobile.model.dto.gallery.GalleryResponse;
+import com.avocado.glampe_mobile.model.dto.placetype.resp.PlaceTypeResponse;
+import com.avocado.glampe_mobile.model.dto.selection.resp.SelectionResponse;
+import com.avocado.glampe_mobile.model.dto.user.resp.UserResponse;
+import com.avocado.glampe_mobile.model.dto.utility.resp.UtilityResponse;
 import com.avocado.glampe_mobile.viewModel.BottomNavViewModel;
+import com.avocado.glampe_mobile.viewModel.CampSiteViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 public class CampSiteFragment extends Fragment {
+
+    private LottieAnimationView loadingView;
 
     private RecyclerView recyclerView;
     private BottomNavViewModel bottomNavViewModel;
     private NavController navController;
+
+    private CampSiteViewModel campSiteViewModel;
+
+    private List<CampSiteResponse> campSiteResponses = new ArrayList<>();
+    private NestedScrollView nestedScrollView;
+
+    private boolean isLoadingMore = false;
+    private boolean hasMorePages = true;
+    CampSiteAdapter campSiteAdapter;
 
     @Nullable
     @Override
@@ -49,21 +66,87 @@ public class CampSiteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        bottomNavViewModel = new ViewModelProvider(requireActivity()).get(BottomNavViewModel.class);
+        initViewModels();
+        initView(view);
+        setupRecyclerView();
+        observeViewModel();
+        if (campSiteAdapter == null || campSiteAdapter.getItemCount() == 0) {
+            loadInitData();
+        }
+
+        setupNestedScrollListener(nestedScrollView);
+    }
+
+    private void initView(View view) {
         navController = Navigation.findNavController(view);
         recyclerView = view.findViewById(R.id.recyclerView);
-        NestedScrollView nestedScrollView = view.findViewById(R.id.nestedScrollView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        nestedScrollView = view.findViewById(R.id.nestedScrollView);
+        loadingView = view.findViewById(R.id.loadingAnimation);
 
-        List<CampSiteResponse> campSiteResponses = createMoreCampSites();
-        CampSiteAdapter campSiteAdapter = new CampSiteAdapter(campSiteResponses, new CampSiteAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(CampSiteResponse campsite) {
-                navController.navigate(R.id.action_campSiteFragment_to_campSiteDetailFragment);
+        loadingView.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+    }
+
+    private void initViewModels() {
+        bottomNavViewModel = new ViewModelProvider(requireActivity()).get(BottomNavViewModel.class);
+        campSiteViewModel = new ViewModelProvider(this).get(CampSiteViewModel.class);
+    }
+
+    private void setupRecyclerView() {
+        campSiteAdapter = new CampSiteAdapter(new ArrayList<>(), campsite -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("campSiteId", campsite.getId());
+            navController.navigate(R.id.action_campSiteFragment_to_campSiteDetailFragment, bundle);
+        });
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(campSiteAdapter);
+    }
+    private void observeViewModel() {
+
+        campSiteViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null) {
+                if (isLoading) {
+                    Log.d("CampSiteFragment", "📍 SHOULD SHOW loading bar");
+                    showLoading();
+                } else {
+                    Log.d("CampSiteFragment", "📍 SHOULD HIDE loading bar");
+                    hideLoading();
+                }
+            } else {
+                Log.w("CampSiteFragment", "⚠️ isLoading is NULL");
             }
         });
-        recyclerView.setAdapter(campSiteAdapter);
-        setupNestedScrollListener(nestedScrollView);
+
+        campSiteViewModel.getCampSiteList().observe(getViewLifecycleOwner(), campSites -> {
+            if (campSites != null) {
+                Log.d("CampSiteFragment", "📋 Received " + campSites.size() + " items");
+                updateAdapter(campSites); // ← USE PROCESSED LIST DIRECTLY
+                loadingView.setVisibility(View.GONE);
+                nestedScrollView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void showLoading() {
+        loadingView.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+    }
+
+    private void hideLoading() {
+        loadingView.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.VISIBLE);
+    }
+
+    private void loadInitData() {
+        CampSiteFilterParams params = CampSiteFilterParams.builder()
+                .currentPage(0)
+                .pageSize(10)
+                .sortBy("id")
+                .sortOrder("ASC")
+                .status("Available")
+                .build();
+        campSiteViewModel.loadAllCampSites(params);
     }
 
     private void setupNestedScrollListener(NestedScrollView nestedScrollView) {
@@ -73,9 +156,11 @@ public class CampSiteFragment extends Fragment {
 
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                handleBottomVisibility(scrollY);
+                handlePagination(v, scrollY);
+            }
+            private void handleBottomVisibility(int scrollY){
                 int deltaY = scrollY - lastScrollY;
-
-                Log.d("ScrollDebug", "NestedScrollView - scrollY: " + scrollY + ", oldScrollY: " + oldScrollY + ", deltaY: " + deltaY);
 
                 // Only respond to significant scroll changes
                 if (Math.abs(deltaY) > SCROLL_THRESHOLD) {
@@ -89,6 +174,17 @@ public class CampSiteFragment extends Fragment {
                     lastScrollY = scrollY;
                 }
             }
+
+            private void handlePagination(NestedScrollView v, int scrollY){
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    if (hasMorePages && !isLoadingMore) {
+                        Log.d("CampSiteFragment", "🔄 Reached bottom - loading more data");
+                        campSiteViewModel.loadMoreCampSites();
+                    } else {
+                        Log.d("CampSiteFragment", "⚠️ Not loading more - hasMorePages: " + hasMorePages + ", isLoadingMore: " + isLoadingMore);
+                    }
+                }
+            }
         });
 
         // Debug info
@@ -99,231 +195,10 @@ public class CampSiteFragment extends Fragment {
         });
     }
 
+    private void updateAdapter(List<CampSiteResponse> campSites) {
+        // Update the existing adapter instead of creating new one
+        campSiteAdapter.updateCampSites(campSites);
 
-
-    public static List<CampSiteResponse> createCampSiteList() {
-        List<CampSiteResponse> campSites = new ArrayList<>();
-
-        // Camp Site 1 - Ba Vì Mountain Camp
-        List<ImageResponse> images1 = Arrays.asList(
-                ImageResponse.builder().id(1).path("/images/bavi_1.jpg").build(),
-                ImageResponse.builder().id(2).path("/images/bavi_2.jpg").build()
-        );
-
-        List<SelectionResponse> selections1 = Arrays.asList(
-                SelectionResponse.builder()
-                        .id(1).name("Gói cơ bản").description("Bao gồm lều và chăn ga")
-                        .price(500000.0).image("/images/basic_package.jpg").status(true).build(),
-                SelectionResponse.builder()
-                        .id(2).name("Gói VIP").description("Bao gồm lều, chăn ga, và BBQ")
-                        .price(800000.0).image("/images/vip_package.jpg").status(true).build()
-        );
-
-        List<PlaceTypeResponse> placeTypes1 = Arrays.asList(
-                PlaceTypeResponse.builder().id(1).name("Núi").imagePath("/images/mountain.jpg").status(true).build(),
-                PlaceTypeResponse.builder().id(2).name("Rừng").imagePath("/images/forest.jpg").status(true).build()
-        );
-
-        List<UtilityResponse> utilities1 = Arrays.asList(
-                UtilityResponse.builder().id(1).name("Wifi").imagePath("/images/wifi.jpg").status(true).build(),
-                UtilityResponse.builder().id(2).name("Điện").imagePath("/images/power.jpg").status(true).build(),
-                UtilityResponse.builder().id(3).name("Nước sạch").imagePath("/images/water.jpg").status(true).build()
-        );
-
-        List<FacilityResponse> facilities1 = Arrays.asList(
-                FacilityResponse.builder().id(1).name("Lửa trại").description("Khu vực lửa trại an toàn")
-                        .image("/images/campfire.jpg").status(true).build(),
-                FacilityResponse.builder().id(2).name("Nhà vệ sinh").description("Nhà vệ sinh chung sạch sẽ")
-                        .image("/images/toilet.jpg").status(true).build()
-        );
-
-        List<CampTypeResponse> campTypes1 = Arrays.asList(
-                CampTypeResponse.builder()
-                        .id(1).type("Lều 2 người").capacity(2).price(300000.0)
-                        .weekendRate(1.5).updatedAt("2024-01-15").quantity(5)
-                        .status(true).campSiteId(1).image("/images/tent_2p.jpg")
-                        .facilities(facilities1).build(),
-                CampTypeResponse.builder()
-                        .id(2).type("Lều 4 người").capacity(4).price(500000.0)
-                        .weekendRate(1.5).updatedAt("2024-01-15").quantity(3)
-                        .status(true).campSiteId(1).image("/images/tent_4p.jpg")
-                        .facilities(facilities1).build()
-        );
-
-        UserResponse user1 = UserResponse.builder()
-                .id(1).firstName("Nguyễn Văn A").email("vana@gmail.com").build();
-
-        CampSiteResponse campSite1 = CampSiteResponse.builder()
-                .id(1).name("Ba Vì Mountain Camp")
-                .address("Xã Tản Lĩnh, Huyện Ba Vì")
-                .city("Hà Nội")
-                .latitude(21.1167).longitude(105.3833)
-                .createdTime("2024-01-01")
-                .status("ACTIVE")
-                .description("Khu cắm trại tuyệt đẹp trên núi Ba Vì với không khí trong lành và phong cảnh hùng vĩ")
-                .depositRate(0.3)
-                .user(user1)
-                .imageList(images1)
-                .campSiteSelectionList(selections1)
-                .campSitePlaceTypeList(placeTypes1)
-                .campSiteUtilityList(utilities1)
-                .campSiteCampTypeList(campTypes1)
-                .build();
-
-        // Camp Site 2 - Sóc Sơn Lake Camp
-        List<ImageResponse> images2 = Arrays.asList(
-                ImageResponse.builder().id(3).path("/images/socson_1.jpg").build(),
-                ImageResponse.builder().id(4).path("/images/socson_2.jpg").build(),
-                ImageResponse.builder().id(5).path("/images/socson_3.jpg").build()
-        );
-
-        List<SelectionResponse> selections2 = Arrays.asList(
-                SelectionResponse.builder()
-                        .id(3).name("Gói gia đình").description("Phù hợp cho gia đình 4-6 người")
-                        .price(1200000.0).image("/images/family_package.jpg").status(true).build()
-        );
-
-        List<PlaceTypeResponse> placeTypes2 = Arrays.asList(
-                PlaceTypeResponse.builder().id(3).name("Hồ").imagePath("/images/lake.jpg").status(true).build(),
-                PlaceTypeResponse.builder().id(4).name("Đồng cỏ").imagePath("/images/grassland.jpg").status(true).build()
-        );
-
-        List<UtilityResponse> utilities2 = Arrays.asList(
-                UtilityResponse.builder().id(4).name("Bãi đỗ xe").imagePath("/images/parking.jpg").status(true).build(),
-                UtilityResponse.builder().id(5).name("Khu BBQ").imagePath("/images/bbq.jpg").status(true).build(),
-                UtilityResponse.builder().id(6).name("Cho thuê đồ cắm trại").imagePath("/images/rental.jpg").status(true).build()
-        );
-
-        List<FacilityResponse> facilities2 = Arrays.asList(
-                FacilityResponse.builder().id(3).name("Bến thuyền").description("Cho thuê thuyền kayak")
-                        .image("/images/boat_dock.jpg").status(true).build(),
-                FacilityResponse.builder().id(4).name("Khu vui chơi trẻ em").description("Sân chơi an toàn cho trẻ em")
-                        .image("/images/playground.jpg").status(true).build()
-        );
-
-        List<CampTypeResponse> campTypes2 = Arrays.asList(
-                CampTypeResponse.builder()
-                        .id(3).type("Bungalow").capacity(6).price(800000.0)
-                        .weekendRate(1.8).updatedAt("2024-01-10").quantity(4)
-                        .status(true).campSiteId(2).image("/images/bungalow.jpg")
-                        .facilities(facilities2).build()
-        );
-
-        UserResponse user2 = UserResponse.builder()
-                .id(2).firstName("Trần Thị B").email("thib@gmail.com").build();
-
-        CampSiteResponse campSite2 = CampSiteResponse.builder()
-                .id(2).name("Sóc Sơn Lake Camp")
-                .address("Xã Hiền Ninh, Huyện Sóc Sơn")
-                .city("Hà Nội")
-                .latitude(21.2500).longitude(105.8333)
-                .createdTime("2024-01-05")
-                .status("ACTIVE")
-                .description("Khu cắm trại bên hồ với nhiều hoạt động thú vị cho cả gia đình")
-                .depositRate(0.25)
-                .user(user2)
-                .imageList(images2)
-                .campSiteSelectionList(selections2)
-                .campSitePlaceTypeList(placeTypes2)
-                .campSiteUtilityList(utilities2)
-                .campSiteCampTypeList(campTypes2)
-                .build();
-
-        // Camp Site 3 - Tam Đảo Forest Camp
-        List<ImageResponse> images3 = Arrays.asList(
-                ImageResponse.builder().id(6).path("/images/tamdao_1.jpg").build(),
-                ImageResponse.builder().id(7).path("/images/tamdao_2.jpg").build()
-        );
-
-        List<SelectionResponse> selections3 = Arrays.asList(
-                SelectionResponse.builder()
-                        .id(4).name("Gói phiêu lưu").description("Trekking và cắm trại qua đêm")
-                        .price(600000.0).image("/images/adventure_package.jpg").status(true).build()
-        );
-
-        List<PlaceTypeResponse> placeTypes3 = Arrays.asList(
-                PlaceTypeResponse.builder().id(1).name("Núi").imagePath("/images/mountain.jpg").status(true).build(),
-                PlaceTypeResponse.builder().id(2).name("Rừng").imagePath("/images/forest.jpg").status(true).build()
-        );
-
-        List<UtilityResponse> utilities3 = Arrays.asList(
-                UtilityResponse.builder().id(7).name("Hướng dẫn viên").imagePath("/images/guide.jpg").status(true).build(),
-                UtilityResponse.builder().id(8).name("Đồ dùng trekking").imagePath("/images/trekking_gear.jpg").status(true).build()
-        );
-
-        List<FacilityResponse> facilities3 = Arrays.asList(
-                FacilityResponse.builder().id(5).name("Đường mòn trekking").description("Nhiều tuyến đường khác độ khó")
-                        .image("/images/trail.jpg").status(true).build()
-        );
-
-        List<CampTypeResponse> campTypes3 = Arrays.asList(
-                CampTypeResponse.builder()
-                        .id(4).type("Lều trekking").capacity(2).price(400000.0)
-                        .weekendRate(1.3).updatedAt("2024-01-12").quantity(8)
-                        .status(true).campSiteId(3).image("/images/trekking_tent.jpg")
-                        .facilities(facilities3).build()
-        );
-
-        UserResponse user3 = UserResponse.builder()
-                .id(3).firstName("Lê Văn C").email("vanc@gmail.com").build();
-
-        CampSiteResponse campSite3 = CampSiteResponse.builder()
-                .id(3).name("Tam Đảo Forest Camp")
-                .address("Tam Đảo, Vĩnh Phúc")
-                .city("Vĩnh Phúc")
-                .latitude(21.4667).longitude(105.6333)
-                .createdTime("2024-01-08")
-                .status("ACTIVE")
-                .description("Trải nghiệm cắm trại giữa rừng nguyên sinh với hoạt động trekking thú vị")
-                .depositRate(0.4)
-                .user(user3)
-                .imageList(images3)
-                .campSiteSelectionList(selections3)
-                .campSitePlaceTypeList(placeTypes3)
-                .campSiteUtilityList(utilities3)
-                .campSiteCampTypeList(campTypes3)
-                .build();
-
-        campSites.add(campSite1);
-        campSites.add(campSite2);
-        campSites.add(campSite3);
-
-        return campSites;
-    }
-
-    private List<CampSiteResponse> createMoreCampSites() {
-        List<CampSiteResponse> allCampSites = new ArrayList<>();
-
-        // Get original 3 items
-        List<CampSiteResponse> originalList = createCampSiteList();
-
-        // Duplicate nhiều lần để có đủ content scroll
-        for (int i = 0; i < 10; i++) { // Tạo 30 items (3 x 10)
-            for (CampSiteResponse original : originalList) {
-                CampSiteResponse duplicate = CampSiteResponse.builder()
-                        .id(original.getId() + (i * 100)) // Unique ID
-                        .name(original.getName() + " #" + (i + 1))
-                        .address(original.getAddress())
-                        .city(original.getCity())
-                        .latitude(original.getLatitude())
-                        .longitude(original.getLongitude())
-                        .createdTime(original.getCreatedTime())
-                        .status(original.getStatus())
-                        .description(original.getDescription())
-                        .depositRate(original.getDepositRate())
-                        .user(original.getUser())
-                        .imageList(original.getImageList())
-                        .campSiteSelectionList(original.getCampSiteSelectionList())
-                        .campSitePlaceTypeList(original.getCampSitePlaceTypeList())
-                        .campSiteUtilityList(original.getCampSiteUtilityList())
-                        .campSiteCampTypeList(original.getCampSiteCampTypeList())
-                        .build();
-
-                allCampSites.add(duplicate);
-            }
-        }
-
-        Log.d("ScrollDebug", "Created " + allCampSites.size() + " items for testing");
-        return allCampSites;
+        Log.d("CampSiteFragment", "✅ Adapter updated with " + campSites.size() + " items");
     }
 }

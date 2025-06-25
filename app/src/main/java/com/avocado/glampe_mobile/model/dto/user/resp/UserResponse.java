@@ -1,4 +1,4 @@
-package com.avocado.glampe_mobile.model.resp;
+package com.avocado.glampe_mobile.model.dto.user.resp;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,16 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PlaceTypeResponse {
+public class UserResponse {
     Integer id;
-    String name;
-    String imagePath;
+    String email;
+    String firstName;
+    String lastName;
+    String address;
+    String phone;
+    String birthday;
     Boolean status;
+    String role;
+    String connectionId;
+    Boolean isRestricted;
 }

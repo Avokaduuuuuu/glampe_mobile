@@ -9,14 +9,14 @@
     android:gravity="center_vertical">
 
     <ImageView
-        android:id="@+id/iv_amenity_icon"
+        android:id="@+id/ivIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="16dp"
         tools:src="@drawable/empty" />
 
     <TextView
-        android:id="@+id/tv_amenity_name"
+        android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

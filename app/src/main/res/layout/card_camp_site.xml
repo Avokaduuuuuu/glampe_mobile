@@ -26,11 +26,11 @@
 
             <!-- Main Image -->
             <ImageView
-                android:id="@+id/activity_image"
+                android:id="@+id/imageMainCampSite"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/camp_site_example" />
+                android:src="@drawable/place_holder_image" />
 
             <!-- Badge (Top Left) -->
             <LinearLayout
@@ -197,7 +197,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" per person"
+                    android:text=" per night"
                     android:textColor="#666666"
                     android:textSize="16sp" />
 

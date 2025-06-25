@@ -40,8 +40,6 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
 
     // Views
     private TextView tvMonthYear;
-    private TextView tabDates, tabMonths, tabFlexible;
-    private TextView btnExactDates, btnPlus1Day, btnPlus2Days;
     private TextView btnSkip;
     private MaterialButton btnNext;
     private RecyclerView rvCalendar;
@@ -117,7 +115,6 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
 
         initViews(view);
         setupCalendar();
-        setupTabs();
         setupButtons();
         setupDragHandle();
         setupMonthNavigation();
@@ -130,12 +127,12 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
         tvMonthYear = view.findViewById(R.id.tv_month_year);
         ivPrevMonth = view.findViewById(R.id.iv_prev_month);
         ivNextMonth = view.findViewById(R.id.iv_next_month);
-        tabDates = view.findViewById(R.id.tab_dates);
-        tabMonths = view.findViewById(R.id.tab_months);
-        tabFlexible = view.findViewById(R.id.tab_flexible);
-        btnExactDates = view.findViewById(R.id.btn_exact_dates);
-        btnPlus1Day = view.findViewById(R.id.btn_plus_1_day);
-        btnPlus2Days = view.findViewById(R.id.btn_plus_2_days);
+//        tabDates = view.findViewById(R.id.tab_dates);
+//        tabMonths = view.findViewById(R.id.tab_months);
+//        tabFlexible = view.findViewById(R.id.tab_flexible);
+//        btnExactDates = view.findViewById(R.id.btn_exact_dates);
+//        btnPlus1Day = view.findViewById(R.id.btn_plus_1_day);
+//        btnPlus2Days = view.findViewById(R.id.btn_plus_2_days);
         btnSkip = view.findViewById(R.id.btn_skip);
         btnNext = view.findViewById(R.id.btn_next);
         rvCalendar = view.findViewById(R.id.rv_calendar);
@@ -187,16 +184,7 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
         rvCalendar.setNestedScrollingEnabled(false);
     }
 
-    private void setupTabs() {
-        tabDates.setOnClickListener(v -> selectTab(TabType.DATES));
-        tabMonths.setOnClickListener(v -> selectTab(TabType.MONTHS));
-        tabFlexible.setOnClickListener(v -> selectTab(TabType.FLEXIBLE));
-    }
-
     private void setupButtons() {
-        btnExactDates.setOnClickListener(v -> selectDuration(DurationType.EXACT));
-        btnPlus1Day.setOnClickListener(v -> selectDuration(DurationType.PLUS_ONE));
-        btnPlus2Days.setOnClickListener(v -> selectDuration(DurationType.PLUS_TWO));
 
         btnSkip.setOnClickListener(v -> {
             if (onDatesSelectedListener != null) {
@@ -301,25 +289,6 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
         btnNext.setEnabled(selectedStartDate != null);
     }
 
-    private void selectTab(TabType tabType) {
-        // Reset all tabs
-        resetTabBackground(tabDates);
-        resetTabBackground(tabMonths);
-        resetTabBackground(tabFlexible);
-
-        // Select current tab
-        switch (tabType) {
-            case DATES:
-                setSelectedTabBackground(tabDates);
-                break;
-            case MONTHS:
-                setSelectedTabBackground(tabMonths);
-                break;
-            case FLEXIBLE:
-                setSelectedTabBackground(tabFlexible);
-                break;
-        }
-    }
 
     private void resetTabBackground(TextView tab) {
         tab.setBackgroundResource(R.drawable.bg_tab_unselected);
@@ -331,25 +300,6 @@ public class TripCalendarBottomSheet extends BottomSheetDialogFragment implement
         tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
     }
 
-    private void selectDuration(DurationType durationType) {
-        // Reset all duration buttons
-        resetDurationBackground(btnExactDates);
-        resetDurationBackground(btnPlus1Day);
-        resetDurationBackground(btnPlus2Days);
-
-        // Select current duration
-        switch (durationType) {
-            case EXACT:
-                setSelectedDurationBackground(btnExactDates);
-                break;
-            case PLUS_ONE:
-                setSelectedDurationBackground(btnPlus1Day);
-                break;
-            case PLUS_TWO:
-                setSelectedDurationBackground(btnPlus2Days);
-                break;
-        }
-    }
 
     private void resetDurationBackground(TextView btn) {
         btn.setBackgroundResource(R.drawable.bg_duration_unselected);
