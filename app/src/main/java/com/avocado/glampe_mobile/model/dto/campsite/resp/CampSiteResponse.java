@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CampSiteResponse {
-    Integer id;
+    Long id;
     String name;
     String address;
     String city;

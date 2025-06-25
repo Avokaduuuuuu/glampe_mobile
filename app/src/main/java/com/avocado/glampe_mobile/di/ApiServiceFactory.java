@@ -1,6 +1,7 @@
 package com.avocado.glampe_mobile.di;
 
 import com.avocado.glampe_mobile.service.CampSiteService;
+import com.avocado.glampe_mobile.service.CampTypeService;
 
 public class ApiServiceFactory {
     private static ApiServiceFactory instance;
@@ -20,5 +21,9 @@ public class ApiServiceFactory {
 
     public CampSiteService getCampSiteService(){
         return retrofitClient.getRetrofit().create(CampSiteService.class);
+    }
+
+    public CampTypeService getCampTypeService(){
+        return retrofitClient.getRetrofit().create(CampTypeService.class);
     }
 }

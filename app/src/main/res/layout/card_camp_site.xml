@@ -26,11 +26,11 @@
 
             <!-- Main Image -->
             <ImageView
-                android:id="@+id/imageCampSite"
+                android:id="@+id/imageMainCampSite"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/camp_site_example" />
+                android:src="@drawable/place_holder_image" />
 
             <!-- Badge (Top Left) -->
             <LinearLayout

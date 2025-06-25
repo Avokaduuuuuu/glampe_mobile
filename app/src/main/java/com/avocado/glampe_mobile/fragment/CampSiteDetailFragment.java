@@ -19,14 +19,27 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.adapter.CampTypeAdapter;
+import com.avocado.glampe_mobile.adapter.ImageSliderAdapter;
+import com.avocado.glampe_mobile.adapter.UtilityAdapter;
 import com.avocado.glampe_mobile.model.dto.campsite.resp.CampSiteResponse;
+import com.avocado.glampe_mobile.model.dto.camptype.filter.CampTypeFilterParams;
+import com.avocado.glampe_mobile.model.dto.gallery.GalleryResponse;
+import com.avocado.glampe_mobile.model.dto.utility.resp.UtilityResponse;
 import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
 import com.avocado.glampe_mobile.viewModel.CampSiteDetailViewModel;
+import com.avocado.glampe_mobile.viewModel.CampTypeViewModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -43,7 +56,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CampSiteDetailFragment extends Fragment implements TripCalendarBottomSheet.OnDatesSelectedListener {
+public class CampSiteDetailFragment extends Fragment implements TripCalendarBottomSheet.OnDatesSelectedListener, OnMapReadyCallback {
 
     ImageButton imageButton;
     NavController navController;
@@ -53,9 +66,11 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     ShapeableImageView campSiteImage;
     TextView tvCheckInDate, tvTotal, tvDescription, tvCampSiteName, tvCampSiteAddress;
     LinearLayout layoutDate;
-    LottieAnimationView loadingAnimation;
-    RecyclerView recyclerViewCampType;
+    LottieAnimationView loadingAnimation, loadingCampType;
+    RecyclerView recyclerViewCampType, recyclerViewUtility;
     NestedScrollView nestedScrollView;
+    MapView mapView;
+    ViewPager2 viewPager2;
 
     private LocalDate checkInDate = LocalDate.now(), checkOutDate = LocalDate.now();
     private int totalNights = 0;
@@ -67,8 +82,12 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     private CampSiteResponse campSiteResponse;
     private Map<Integer, Integer> selectedQuantity = new HashMap<>();
     private CampTypeAdapter campTypeAdapter;
+    private UtilityAdapter utilityAdapter;
+    private ImageSliderAdapter imageSliderAdapter;
     private List<CampTypeResponse> campTypeResponses = new ArrayList<>();
+    private List<UtilityResponse> utilityResponses = new ArrayList<>();
     private CampSiteDetailViewModel campSiteDetailViewModel;
+    private CampTypeViewModel campTypeViewModel;
 
     private Long campSiteId;
 
@@ -88,6 +107,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         getCampSiteId();
         fetchData();
         observeViewModel();
+        mapView.onCreate(savedInstanceState);
 
         imageButton.setOnClickListener(v -> navController.popBackStack());
     }
@@ -115,11 +135,16 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         tvTotal = view.findViewById(R.id.tvTotal);
         loadingAnimation = view.findViewById(R.id.loadingAnimation);
         nestedScrollView = view.findViewById(R.id.scrollView);
+        recyclerViewUtility = view.findViewById(R.id.utilityRecyclerView);
+        mapView = view.findViewById(R.id.mapView);
+        viewPager2 = view.findViewById(R.id.viewPager);
+        loadingCampType = view.findViewById(R.id.loadingCampType);
         if (selectedQuantity.isEmpty()) tvTotal.setText(PriceFormat.formatUsd(0.0));
     }
 
     private void initViewModels(){
         campSiteDetailViewModel = new ViewModelProvider(this).get(CampSiteDetailViewModel.class);
+        campTypeViewModel = new ViewModelProvider(this).get(CampTypeViewModel.class);
     }
 
     private void fetchData(){
@@ -141,7 +166,29 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
             if (campsite != null) {
                 campSiteResponse = campsite;
                 loadingAnimation.setVisibility(View.GONE);
+                mapView.getMapAsync(this);
                 updateView();
+            }
+        });
+    }
+
+    private void observeCampTypeViewModel(){
+
+        campTypeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null) {
+                loadingCampType.setVisibility(View.VISIBLE);
+                recyclerViewCampType.setVisibility(View.GONE);
+            }else {
+                Log.d("CampType Loading: ", "NUll");
+            }
+        });
+
+        campTypeViewModel.getCampTypes().observe(getViewLifecycleOwner(), campTypes -> {
+            if (campTypes != null) {
+                campTypeResponses = campTypes;
+                recyclerViewCampType.setVisibility(View.VISIBLE);
+                loadingCampType.setVisibility(View.GONE);
+                setUpCampTypeAdapter();
             }
         });
     }
@@ -149,7 +196,8 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     private void updateView(){
         setUpButtons();
         setUpCalendar();
-        setUpCampTypeAdapter();
+        setUpUtilityAdapter();
+        setUpViewPager();
         tvCampSiteName.setText(campSiteResponse.getName());
         tvCampSiteAddress.setText(campSiteResponse.getAddress());
         tvDescription.setText(campSiteResponse.getDescription());
@@ -217,11 +265,18 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         String checkOutDate = checkOut.format(formatter);
         String date = checkInDate + " - " + checkOutDate;
         tvCheckInDate.setText(date);
-
+        campTypeViewModel.fetchAllCampTypes(
+                CampTypeFilterParams.builder()
+                        .campSiteId(campSiteResponse.getId())
+                        .checkInAt(checkIn)
+                        .checkOutAt(checkOut)
+                        .build()
+        );
+        observeCampTypeViewModel();
     }
 
+
     private void setUpCampTypeAdapter(){
-        campTypeResponses = campSiteResponse.getCampTypes();
         recyclerViewCampType.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         campTypeAdapter = new CampTypeAdapter(campTypeResponses);
         recyclerViewCampType.setAdapter(campTypeAdapter);
@@ -245,6 +300,12 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         });
     }
 
+    private void setUpUtilityAdapter(){
+        utilityResponses = campSiteResponse.getUtilities();
+        recyclerViewUtility.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        utilityAdapter = new UtilityAdapter(utilityResponses);
+        recyclerViewUtility.setAdapter(utilityAdapter);
+    }
 
     private Long countWeekends(LocalDate checkIn, LocalDate checkOut) {
         if (checkOut.isBefore(checkIn) || checkOut.equals(checkIn)) {
@@ -296,5 +357,68 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
             Log.d("total: ", total.toString());
             tvTotal.setText(PriceFormat.formatUsd(total.doubleValue()));
         } else tvTotal.setText(PriceFormat.formatUsd(0.0));
+    }
+
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        if (campSiteResponse != null && campSiteResponse.getLatitude() != null && campSiteResponse.getLongitude() != null) {
+            LatLng campSiteLocation = new LatLng(campSiteResponse.getLatitude(), campSiteResponse.getLongitude());
+            googleMap.addMarker(new MarkerOptions().position(campSiteLocation));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campSiteLocation, 15f));
+        } else {
+            Log.e("MapReady", "CampSiteResponse or its location is null");
+        }
+    }
+
+    public void setUpViewPager(){
+        if (!campSiteResponse.getGalleries().isEmpty()) {
+            List<String> urls = campSiteResponse.getGalleries().stream().map(GalleryResponse::getPath).collect(Collectors.toList());
+            imageSliderAdapter = new ImageSliderAdapter(urls);
+
+            viewPager2.setAdapter(imageSliderAdapter);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mapView != null) mapView.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mapView != null) mapView.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mapView != null) mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (mapView != null) mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (mapView != null) mapView.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mapView != null) mapView.onLowMemory();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mapView != null) mapView.onSaveInstanceState(outState);
     }
 }

@@ -24,6 +24,7 @@ public class CampTypeResponse {
     Double weekendPrice;
     String updatedAt;
     Integer quantity;
+    Long remainQuantity;
     Boolean isDeleted;
     Integer campSiteId;
     String image;

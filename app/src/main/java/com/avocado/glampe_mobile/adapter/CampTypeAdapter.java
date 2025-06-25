@@ -147,7 +147,7 @@ public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTy
 
             // Basic information
             tvType.setText(campTypeResponse.getType());
-            tvCampQuantity.setText(itemView.getContext().getString(R.string.camp_quantity, campTypeResponse.getQuantity()));
+            tvCampQuantity.setText(itemView.getContext().getString(R.string.camp_quantity, campTypeResponse.getRemainQuantity()));
 
             // Prices
             tvPrice.setText(PriceFormat.formatUsd(campTypeResponse.getPrice()));
@@ -207,7 +207,7 @@ public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTy
                 btnDecrease.setAlpha(currentCampType.getSelectedQuantity() > 0 ? 1.0f : 0.5f);
 
                 // Enable/disable increase button
-                boolean canIncrease = currentCampType.getSelectedQuantity() < currentCampType.getQuantity()
+                boolean canIncrease = currentCampType.getSelectedQuantity() < currentCampType.getRemainQuantity()
                         && !currentCampType.getIsDeleted();
                 btnIncrease.setEnabled(canIncrease);
                 btnIncrease.setAlpha(canIncrease ? 1.0f : 0.5f);
