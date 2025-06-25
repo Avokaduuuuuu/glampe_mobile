@@ -223,6 +223,129 @@
                                 android:layout_marginTop="15dp"
                                 android:background="@drawable/border_background"/>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/border_layout"
+                            android:padding="16dp">
+
+                            <!-- Header với title và số lượng reviews -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="16dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Verified Reviews"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="(675)"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/gray" />
+                            </LinearLayout>
+
+                            <!-- Phần hiển thị rating tổng -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="20dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="4.5"
+                                    android:textSize="36sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/black"
+                                    android:layout_marginEnd="12dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <!-- Rating stars -->
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:layout_marginBottom="4dp">
+
+                                        <ImageView
+                                            android:layout_width="16dp"
+                                            android:layout_height="16dp"
+                                            android:src="@drawable/ic_star_filled"
+                                            android:layout_marginEnd="2dp" />
+
+                                        <ImageView
+                                            android:layout_width="16dp"
+                                            android:layout_height="16dp"
+                                            android:src="@drawable/ic_star_filled"
+                                            android:layout_marginEnd="2dp" />
+
+                                        <ImageView
+                                            android:layout_width="16dp"
+                                            android:layout_height="16dp"
+                                            android:src="@drawable/ic_star_filled"
+                                            android:layout_marginEnd="2dp" />
+
+                                        <ImageView
+                                            android:layout_width="16dp"
+                                            android:layout_height="16dp"
+                                            android:src="@drawable/ic_star_filled"
+                                            android:layout_marginEnd="2dp" />
+
+                                        <ImageView
+                                            android:layout_width="16dp"
+                                            android:layout_height="16dp"
+                                            android:src="@drawable/ic_star_half" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Based on 675 Reviews"
+                                        android:textSize="12sp"
+                                        android:textColor="@color/gray" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- RecyclerView cho danh sách reviews -->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewReviews"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                android:layout_marginBottom="16dp" />
+
+                            <!-- Nút More -->
+                            <Button
+                                android:id="@+id/btnMore"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:text="More"
+                                android:textColor="@color/blue_500"
+                                android:background="@drawable/button_outline_blue"
+                                android:drawableEnd="@drawable/ic_arrow_down"
+                                android:gravity="center"
+                                android:textAllCaps="false" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
