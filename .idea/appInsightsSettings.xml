@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.avocado.glampe_mobile" />
+                  <option name="mobileSdkAppId" value="1:731252414302:android:ff1f1e2c75cac01280e1cf" />
+                  <option name="projectId" value="glampe-project" />
+                  <option name="projectNumber" value="731252414302" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -2,6 +2,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -14,6 +15,10 @@ android {
         localProperties.load(localPropertiesFile.inputStream())
     }
 
+    buildFeatures{
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.avocado.glampe_mobile"
         minSdk = 26
@@ -24,6 +29,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["MAPS_API_KEY"] = localProperties["MAPS_API_KEY"] as Any
+        buildConfigField(
+            "String",
+            "SERVER_CLIENT_ID",
+            "\"${localProperties["SERVER_CLIENT_ID"]}\""
+        )
 
     }
 
@@ -48,6 +58,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.firebase.auth)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -74,5 +88,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
 
 }

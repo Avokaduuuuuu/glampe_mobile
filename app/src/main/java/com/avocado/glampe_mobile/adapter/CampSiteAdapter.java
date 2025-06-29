@@ -19,8 +19,11 @@ import com.avocado.glampe_mobile.model.dto.campsite.resp.CampSiteResponse;
 import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.Comparator;
@@ -70,29 +73,19 @@ public class CampSiteAdapter extends RecyclerView.Adapter<CampSiteAdapter.CampSi
         holder.txPrice.setText(holder.itemView.getContext().getString(R.string.price_per_night, PriceFormat.formatUsd(min), PriceFormat.formatUsd(max)));
         holder.txPlaceType.setText(placeType);
         if (!campSiteResponse.getGalleries().isEmpty()) {
-            Log.d("Campsite's first image", campSiteResponse.getGalleries().get(0).getPath());
-            Glide.with(holder.itemView.getContext())
-                    .load("https://glampe-bucket.s3.ap-southeast-1.amazonaws.com/camp_sites/Pine%20Valley%20Campground/images/1750662865282_LlS4gw7H-441887555_122149963652188663_7815166877511652508_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250625T101127Z&X-Amz-SignedHeaders=host&X-Amz-Credential=AKIA6K5V7HCWSEK6MUGJ%2F20250625%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=7200&X-Amz-Signature=b0726b6addd79543e47a5d9668ec172398782a2fa3d529dc01b6a3939a9713e1")
-                    .placeholder(R.drawable.place_holder_image)
-                    .error(R.drawable.ic_broken_image) // Fallback if failed
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                    Target<Drawable> target, boolean isFirstResource) {
-                            Log.e("GLIDE_ERROR", "Failed to load image", e);
-                            return false;
-                        }
-
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model,
-                                                       Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.d("GLIDE", "Image loaded successfully");
-                            return false;
-                        }
-                    })
-                    .into(holder.imageCampSite);
+            String url = campSiteResponse.getGalleries().get(0).getPath();
+            Log.d("First Image", campSiteResponse.getGalleries().get(0).toString());
+            if (url != null && !url.trim().isEmpty()) {
+                Glide.with(holder.itemView.getContext())
+                        .asBitmap()
+                        .load(url.trim())
+                        .placeholder(R.drawable.place_holder_image)
+                        .into(holder.imageCampSite);
+            } else {
+                Log.e("GLIDE", "Image URL is null or empty");
+            }
         }
+
         holder.cardCampSite.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onClick(campSiteResponse);
