@@ -56,6 +56,7 @@
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="6dp"/>
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_edittext"
@@ -77,6 +78,7 @@
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="6dp"/>
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etLastName"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_edittext"
@@ -98,6 +100,7 @@
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="6dp"/>
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_edittext"
@@ -121,6 +124,7 @@
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="6dp"/>
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etAddress"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_edittext"
@@ -141,10 +145,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/h1"
-                    android:text="Country"
+                    android:text="Phone"
                     android:paddingLeft="5dp"
                     android:layout_marginBottom="6dp"/>
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_edittext"

@@ -18,8 +18,8 @@ public class UserResponse {
     String firstName;
     String lastName;
     String address;
-    String phone;
-    String birthday;
+    String phoneNumber;
+    String dob;
     Boolean status;
     String role;
     String connectionId;

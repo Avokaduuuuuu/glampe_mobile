@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.avocado.glampe_mobile.BuildConfig;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.activity.MainActivity;
+import com.avocado.glampe_mobile.di.AuthManager;
 import com.avocado.glampe_mobile.model.dto.user.req.UserVerifyRequest;
 import com.avocado.glampe_mobile.viewModel.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -151,6 +152,7 @@ public class AuthenticationFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 googleSignInButton.setVisibility(View.GONE);
                 Toast.makeText(requireContext(), "Login successfully", Toast.LENGTH_SHORT).show();
+                AuthManager.saveAuthResponse(requireContext(), authUser);
                 navigateToMain();
             }
         });
