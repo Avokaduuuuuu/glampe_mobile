@@ -34,6 +34,7 @@ public class CampSiteViewModel extends ViewModel {
     private int currentPage = 0;
     private CampSiteFilterParams currentFilterParams;
 
+
     public CampSiteViewModel() {
         this.campSiteRepository = CampSiteRepository.getInstance();
 

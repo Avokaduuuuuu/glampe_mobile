@@ -1,4 +1,6 @@
-package com.avocado.glampe_mobile.model.dto.selection.resp;
+package com.avocado.glampe_mobile.model.dto.bookingselection.resp;
+
+import com.avocado.glampe_mobile.model.dto.selection.resp.SelectionResponse;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,13 +14,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SelectionResponse {
-    Integer id;
+public class BookingSelectionResponse {
+    Long id;
+    SelectionResponse selection;
     String name;
-    String description;
-    Double price;
-    String image;
-    Boolean isDeleted;
-    @Builder.Default
-    Integer selectedQuantity = 0;
+    Integer quantity;
 }

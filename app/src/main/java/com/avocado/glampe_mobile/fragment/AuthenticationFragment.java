@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class AuthenticationFragment extends Fragment {
     UserViewModel userViewModel;
 
     ProgressBar progressBar;
+    FrameLayout loadingOverlay;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -65,7 +67,6 @@ public class AuthenticationFragment extends Fragment {
                                 auth = FirebaseAuth.getInstance();
                                 Log.d("User email", auth.getCurrentUser().getEmail());
                                 userViewModel.verifyUser(UserVerifyRequest.builder().email(auth.getCurrentUser().getEmail()).build());
-                                Toast.makeText(requireContext(), auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                                 observeVerifyUser();
                             }else{
                                 Toast.makeText(requireContext(), "Failed to sign in", Toast.LENGTH_SHORT).show();
@@ -103,6 +104,7 @@ public class AuthenticationFragment extends Fragment {
         guestBrowseButton = view.findViewById(R.id.guestBrowseButton);
         googleSignInButton = view.findViewById(R.id.googleSignInButton);
         progressBar = view.findViewById(R.id.progressBar);
+        loadingOverlay = view.findViewById(R.id.loadingOverlay);
     }
 
     private void initViewModel(){
@@ -141,19 +143,26 @@ public class AuthenticationFragment extends Fragment {
         userViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
                 if (isLoading) {
-                    googleSignInButton.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.VISIBLE);
+                    googleSignInButton.setEnabled(false);
+                    guestBrowseButton.setEnabled(false);
+                    loadingOverlay.setVisibility(View.VISIBLE);
                 }
             }
         });
 
         userViewModel.getAuthUser().observe(getViewLifecycleOwner(), authUser -> {
             if (authUser != null) {
-                progressBar.setVisibility(View.GONE);
-                googleSignInButton.setVisibility(View.GONE);
-                Toast.makeText(requireContext(), "Login successfully", Toast.LENGTH_SHORT).show();
+                loadingOverlay.setVisibility(View.GONE);
                 AuthManager.saveAuthResponse(requireContext(), authUser);
                 navigateToMain();
+            }
+        });
+
+        userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                googleSignInButton.setEnabled(true);
+                guestBrowseButton.setEnabled(true);
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
     }

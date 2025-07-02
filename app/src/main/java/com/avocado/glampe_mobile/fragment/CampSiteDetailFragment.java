@@ -1,17 +1,25 @@
 package com.avocado.glampe_mobile.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,13 +33,21 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.adapter.CampTypeAdapter;
 import com.avocado.glampe_mobile.adapter.ImageSliderAdapter;
+import com.avocado.glampe_mobile.adapter.SelectionAdapter;
 import com.avocado.glampe_mobile.adapter.UtilityAdapter;
+import com.avocado.glampe_mobile.di.AuthManager;
+import com.avocado.glampe_mobile.model.dto.booking.req.BookingRequest;
+import com.avocado.glampe_mobile.model.dto.bookingdetail.req.BookingDetailRequest;
 import com.avocado.glampe_mobile.model.dto.campsite.resp.CampSiteResponse;
 import com.avocado.glampe_mobile.model.dto.camptype.filter.CampTypeFilterParams;
 import com.avocado.glampe_mobile.model.dto.gallery.GalleryResponse;
+import com.avocado.glampe_mobile.model.dto.selection.req.BookingSelectionRequest;
+import com.avocado.glampe_mobile.model.dto.selection.resp.SelectionResponse;
+import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 import com.avocado.glampe_mobile.model.dto.utility.resp.UtilityResponse;
 import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
+import com.avocado.glampe_mobile.viewModel.BookingViewModel;
 import com.avocado.glampe_mobile.viewModel.CampSiteDetailViewModel;
 import com.avocado.glampe_mobile.viewModel.CampTypeViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -60,36 +76,43 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
     ImageButton imageButton;
     NavController navController;
-    MaterialButton btnAbout, btnOption, btnReview;
+    MaterialButton btnAbout, btnOption, btnReview, btnBookNow;
     List<MaterialButton> buttons;
     ViewFlipper viewFlipper;
     ShapeableImageView campSiteImage;
-    TextView tvCheckInDate, tvTotal, tvDescription, tvCampSiteName, tvCampSiteAddress;
+    TextView tvCheckInDate, tvPricePerNight, tvAddOnTotal, tvTotal, tvDescription, tvCampSiteName, tvCampSiteAddress;
     LinearLayout layoutDate;
     LottieAnimationView loadingAnimation, loadingCampType;
-    RecyclerView recyclerViewCampType, recyclerViewUtility;
+    RecyclerView recyclerViewCampType, recyclerViewUtility, recyclerViewSelection;
     NestedScrollView nestedScrollView;
     MapView mapView;
     ViewPager2 viewPager2;
+    FrameLayout loadingOverlay;
 
     private LocalDate checkInDate = LocalDate.now(), checkOutDate = LocalDate.now();
     private int totalNights = 0;
     private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal addOnTotal = BigDecimal.ZERO;
+    private BigDecimal pricePerNight = BigDecimal.ZERO;
     private long weekdays = 0;
     private long weekend = 0;
 
 
     private CampSiteResponse campSiteResponse;
-    private Map<Integer, Integer> selectedQuantity = new HashMap<>();
+    private Map<Long, Integer> selectedQuantity = new HashMap<>();
+    private Map<Integer, Integer> selectionSelectedQuantity = new HashMap<>();
     private CampTypeAdapter campTypeAdapter;
     private UtilityAdapter utilityAdapter;
+    private SelectionAdapter selectionAdapter;
     private ImageSliderAdapter imageSliderAdapter;
     private List<CampTypeResponse> campTypeResponses = new ArrayList<>();
     private List<UtilityResponse> utilityResponses = new ArrayList<>();
     private CampSiteDetailViewModel campSiteDetailViewModel;
     private CampTypeViewModel campTypeViewModel;
+    private BookingViewModel bookingViewModel;
 
     private Long campSiteId;
+    private AuthUserResponse authUser;
 
     @Nullable
     @Override
@@ -101,6 +124,10 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Window window = requireActivity().getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
 
         initialize(view);
         initViewModels();
@@ -109,13 +136,50 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         observeViewModel();
         mapView.onCreate(savedInstanceState);
 
-        imageButton.setOnClickListener(v -> navController.popBackStack());
+        onClickListener();
     }
 
     private void getCampSiteId(){
         if (getArguments() != null){
             campSiteId = getArguments().getLong("campSiteId", -1L);
         }
+    }
+
+    private void onClickListener(){
+        imageButton.setOnClickListener(v -> navController.popBackStack());
+        btnBookNow.setOnClickListener(v -> {
+            List<BookingDetailRequest> bookingDetailRequests = new ArrayList<>();
+            List<BookingSelectionRequest> bookingSelectionRequests = new ArrayList<>();
+
+            selectedQuantity.forEach((key, value) -> {
+                bookingDetailRequests.add(BookingDetailRequest.builder()
+                                .campTypeId(key.longValue())
+                                .quantity(value)
+                        .build());
+            });
+
+            selectionSelectedQuantity.forEach((key, value) -> {
+                bookingSelectionRequests.add(BookingSelectionRequest.builder()
+                                .selectionId(key.longValue())
+                                .quantity(value)
+                        .build());
+            });
+
+            BookingRequest bookingRequest = BookingRequest.builder()
+                    .userId(authUser.getUser().getId())
+                    .campSiteId(campSiteId)
+                    .checkInTime(checkInDate.atStartOfDay())
+                    .checkOutTime(checkOutDate.atStartOfDay())
+                    .bookingDetailRequests(bookingDetailRequests)
+                    .bookingSelectionRequests(bookingSelectionRequests)
+                    .totalAmount(total)
+                    .build();
+
+            observerAddBooking();
+            bookingViewModel.addBooking(bookingRequest);
+
+            Log.d("Booking Request", bookingRequest.toString());
+        });
     }
 
     private void initialize(View view){
@@ -132,19 +196,31 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         tvCheckInDate.setText("Select dates");
         layoutDate = view.findViewById(R.id.date_layout);
         recyclerViewCampType = view.findViewById(R.id.recyclerViewCampType);
-        tvTotal = view.findViewById(R.id.tvTotal);
+        tvPricePerNight = view.findViewById(R.id.tvPricePerNight);
+        tvAddOnTotal = view.findViewById(R.id.tvAddonTotal);
+        tvTotal = view.findViewById(R.id.tvTotalPrice);
         loadingAnimation = view.findViewById(R.id.loadingAnimation);
         nestedScrollView = view.findViewById(R.id.scrollView);
         recyclerViewUtility = view.findViewById(R.id.utilityRecyclerView);
         mapView = view.findViewById(R.id.mapView);
         viewPager2 = view.findViewById(R.id.viewPager);
         loadingCampType = view.findViewById(R.id.loadingCampType);
-        if (selectedQuantity.isEmpty()) tvTotal.setText(PriceFormat.formatUsd(0.0));
+        recyclerViewSelection = view.findViewById(R.id.recyclerViewSelection);
+        btnBookNow = view.findViewById(R.id.btnBookNow);
+        authUser = AuthManager.getAuthResponse(requireContext());
+        loadingOverlay = view.findViewById(R.id.loadingOverlay);
+        if (selectedQuantity.isEmpty() && selectionSelectedQuantity.isEmpty()) {
+            tvTotal.setText(PriceFormat.formatUsd(0.0));
+            tvAddOnTotal.setText(PriceFormat.formatUsd(0.0));
+            tvPricePerNight.setText(PriceFormat.formatUsd(0.0));
+            updateBtnState();
+        }
     }
 
     private void initViewModels(){
         campSiteDetailViewModel = new ViewModelProvider(this).get(CampSiteDetailViewModel.class);
         campTypeViewModel = new ViewModelProvider(this).get(CampTypeViewModel.class);
+        bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
     }
 
     private void fetchData(){
@@ -189,6 +265,37 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
                 recyclerViewCampType.setVisibility(View.VISIBLE);
                 loadingCampType.setVisibility(View.GONE);
                 setUpCampTypeAdapter();
+                setUpSelectionAdapter();
+            }
+        });
+    }
+
+    private void observerAddBooking() {
+        bookingViewModel.getIsLoadingAdd().observe(getViewLifecycleOwner(), isLoadingAdd -> {
+            if (isLoadingAdd != null) {
+                if (isLoadingAdd) {
+                    loadingOverlay.setVisibility(View.VISIBLE);
+                    btnBookNow.setEnabled(false);
+                }
+            }
+        });
+
+        bookingViewModel.getBooking().observe(getViewLifecycleOwner(), booking -> {
+            if (booking != null) {
+                Toast.makeText(requireContext(), "Adding booking successfully", Toast.LENGTH_SHORT).show();
+                Log.d("CampSiteDetailFragment", "Adding booking successfully: " + booking);
+                loadingOverlay.setVisibility(View.GONE);
+                btnBookNow.setEnabled(true);
+
+                Bundle bundle = new Bundle();
+                bundle.putLong("bookingId", booking.getId());
+                navController.navigate(R.id.action_campSiteDetailFragment_to_bookingDetailFragment, bundle);
+            }
+        });
+
+        bookingViewModel.getErrorAdd().observe(getViewLifecycleOwner(), errorAdd -> {
+            if (errorAdd != null) {
+                Toast.makeText(requireContext(), errorAdd, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -254,6 +361,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
             this.weekdays = this.totalNights - this.weekend;
 
             selectedQuantity.clear();
+            selectionSelectedQuantity.clear();
             if (campTypeAdapter != null) campTypeAdapter.resetQuantities();
             updateTotal();
         }
@@ -300,6 +408,25 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         });
     }
 
+    private void setUpSelectionAdapter() {
+        Log.d("Selecions", campSiteResponse.getSelections().toString());
+        recyclerViewSelection.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        selectionAdapter = new SelectionAdapter(campSiteResponse.getSelections());
+        recyclerViewSelection.setAdapter(selectionAdapter);
+        selectionAdapter.setOnSelectionListener(new SelectionAdapter.OnSelectionListener() {
+            @Override
+            public void onQuantityChanged(SelectionResponse selectionResponse, int newQuantity) {
+                selectionSelectedQuantity.put(selectionResponse.getId(), newQuantity);
+                updateTotal();
+            }
+
+            @Override
+            public void onSelectionSelected(SelectionResponse selectionResponse) {
+
+            }
+        });
+    }
+
     private void setUpUtilityAdapter(){
         utilityResponses = campSiteResponse.getUtilities();
         recyclerViewUtility.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
@@ -331,11 +458,18 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
     private void updateTotal() {
         // Reset total before calculation
-        if (!selectedQuantity.isEmpty()) {
+        if (!selectedQuantity.isEmpty() || !selectionSelectedQuantity.isEmpty()) {
             total = BigDecimal.ZERO; // ✅ FIXED! Reset total first
+            pricePerNight = BigDecimal.ZERO;
+            addOnTotal = BigDecimal.ZERO;
 
-            Map<Integer, CampTypeResponse> campTypeMap = campTypeResponses.stream()
+            updateBtnState();
+
+            Map<Long, CampTypeResponse> campTypeMap = campTypeResponses.stream()
                     .collect(Collectors.toMap(CampTypeResponse::getId, Function.identity()));
+
+            Map<Integer, SelectionResponse> selectionMap = campSiteResponse.getSelections().stream()
+                            .collect(Collectors.toMap(SelectionResponse::getId, Function.identity()));
 
             selectedQuantity.forEach((key, value) -> {
                 if (value > 0) { // Only calculate if quantity > 0
@@ -349,14 +483,37 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
                         BigDecimal totalWeekend = BigDecimal.valueOf(campType.getWeekendPrice() * weekend * value);
                         Log.d("total weekend:", totalWeekend.toString());
 
-                        total = total.add(totalWeekDays).add(totalWeekend); // ✅ FIXED! Cleaner addition
+                        pricePerNight = pricePerNight.add(totalWeekDays).add(totalWeekend); // ✅ FIXED! Cleaner addition
                     }
                 }
             });
 
+            selectionSelectedQuantity.forEach((key, value) -> {
+                if (value > 0) {
+                    SelectionResponse selectionResponse = selectionMap.get(key);
+                    if (selectionResponse != null) {
+                        addOnTotal = addOnTotal.add(BigDecimal.valueOf(value * selectionResponse.getPrice()));
+                    }
+                }
+            });
+
+            total = pricePerNight.add(addOnTotal);
+
             Log.d("total: ", total.toString());
             tvTotal.setText(PriceFormat.formatUsd(total.doubleValue()));
+            tvPricePerNight.setText(PriceFormat.formatUsd(pricePerNight.doubleValue()));
+            tvAddOnTotal.setText(PriceFormat.formatUsd(addOnTotal.doubleValue()));
         } else tvTotal.setText(PriceFormat.formatUsd(0.0));
+    }
+
+    private void updateBtnState(){
+        Boolean hasSelection = !selectedQuantity.isEmpty();
+
+        btnBookNow.setEnabled(hasSelection);
+        btnBookNow.setBackgroundTintList(ContextCompat.getColorStateList(
+                requireContext(),
+                hasSelection ? R.color.btn_book_now : R.color.disabled_gray
+        ));
     }
 
 

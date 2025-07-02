@@ -9,13 +9,15 @@
     app:cardUseCompatPadding="true"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:id="@+id/cardBooking">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/ivCampSite"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/camp_site_example"
@@ -30,6 +32,7 @@
             android:padding="10dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvCampSiteName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Campsite Name"
@@ -53,6 +56,7 @@
                         android:alpha="0.5"/>
 
                     <TextView
+                        android:id="@+id/tvBookingId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#0123456789"
@@ -72,6 +76,7 @@
                         android:alpha="0.5"/>
                     
                     <TextView
+                        android:id="@+id/tvCreatedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="24/12/2025"
@@ -91,6 +96,7 @@
                         android:alpha="0.5"/>
 
                     <TextView
+                        android:id="@+id/tvCheckInAt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="24/12/2025"
@@ -110,6 +116,7 @@
                         android:alpha="0.5"/>
 
                     <TextView
+                        android:id="@+id/tvCheckOutAt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="24/12/2025"
@@ -117,6 +124,7 @@
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/layoutStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
@@ -124,6 +132,7 @@
                 android:background="@drawable/border_background"
                 android:backgroundTint="@color/blue_50">
                 <TextView
+                    android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Paid"

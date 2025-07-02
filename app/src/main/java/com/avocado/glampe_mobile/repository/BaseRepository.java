@@ -1,5 +1,7 @@
 package com.avocado.glampe_mobile.repository;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.avocado.glampe_mobile.model.dto.ApiResponse;
@@ -18,20 +20,25 @@ public abstract class BaseRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<T> apiResponse = response.body();
                     if (apiResponse.getIsSuccess()) {
-                        successLiveData.setValue(apiResponse.getData());
+                        Log.d("BaseRepository", "LiveData instance: " + successLiveData.toString());
+                        successLiveData.postValue(apiResponse.getData()); // ✅ FIXED
                     } else {
-                        errorLiveData.setValue(apiResponse.getMessage());
+                        Log.d("BaseRepository", "Is Success false");
+                        errorLiveData.postValue(apiResponse.getMessage());
                     }
 
                 } else {
-                    errorLiveData.setValue("Server Error: " + response.code());
+                    Log.d("BaseRepository", "response fail or body is null");
+                    errorLiveData.postValue("Server Error: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<T>> call, Throwable throwable) {
-                errorLiveData.setValue("Network error: " + throwable.getMessage());
+                Log.d("BaseRepository", "on Failure");
+                errorLiveData.postValue("Network error: " + throwable.getMessage());
             }
         });
     }
+
 }
