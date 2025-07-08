@@ -35,9 +35,9 @@ public class SelectionPriceAdapter extends RecyclerView.Adapter<SelectionPriceAd
         BookingSelectionResponse bookingSelectionResponse = bookingSelections.get(i);
 
         holder.tvSelectionName.setText(bookingSelectionResponse.getName());
-        String price = PriceFormat.formatUsd(bookingSelectionResponse.getSelection().getPrice()) + " x " + bookingSelectionResponse.getQuantity() + " units";
+        String price = PriceFormat.formatUsd(bookingSelectionResponse.getSelection().getPrice().doubleValue()) + " x " + bookingSelectionResponse.getQuantity() + " units";
         holder.tvPriceDetail.setText(price);
-        holder.tvSubTotal.setText(PriceFormat.formatUsd(bookingSelectionResponse.getSelection().getPrice() * bookingSelectionResponse.getQuantity()));
+        holder.tvSubTotal.setText(PriceFormat.formatUsd(bookingSelectionResponse.getSelection().getPrice().doubleValue() * bookingSelectionResponse.getQuantity()));
     }
 
     @Override

@@ -286,15 +286,6 @@
                         android:layout_marginBottom="8dp"
                         style="@style/h3"/>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCampTypes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never"
-                        android:layout_marginBottom="16dp"
-                        android:paddingLeft="10dp"/>
-
                     <!-- Selections Price Breakdown -->
                     <TextView
                         android:layout_width="wrap_content"
@@ -361,6 +352,15 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCampTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingLeft="10dp" />
 
             </LinearLayout>
 
@@ -469,21 +469,63 @@
 
             </LinearLayout>
 
-            <!-- Continue Button -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnContinueToPayment"
+            <!-- Replace the simple CardInputWidget section with this complete Payment Information section -->
+
+            <LinearLayout
+                android:id="@+id/layoutPayment"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_margin="20dp"
-                android:text="Continue to Payment"
-                android:textColor="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/button_background"
-                android:stateListAnimator="@animator/button_scale"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <!-- Payment Information Section -->
+                <com.stripe.android.view.CardInputWidget
+                    android:id="@+id/cardInputWidget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/border_edittext"/>
+
+                <!-- Continue Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnContinueToPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_margin="20dp"
+                    android:text="Continue to Payment"
+                    android:textColor="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background"
+                    android:stateListAnimator="@animator/button_scale"/>
+            </LinearLayout>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#AA000000"
+        android:visibility="gone"
+        android:elevation="1000dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fitsSystemWindows="false">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingOverlayAnimation"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="loading.json"/>
+    </FrameLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

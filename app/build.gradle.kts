@@ -34,6 +34,11 @@ android {
             "SERVER_CLIENT_ID",
             "\"${localProperties["SERVER_CLIENT_ID"]}\""
         )
+        buildConfigField(
+            "String",
+            "STRIPE_PUBLISH_KEY",
+            "\"${localProperties["STRIPE_PUBLISH_KEY"]}\""
+        )
 
     }
 
@@ -88,6 +93,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-
-
+    implementation("com.stripe:stripe-android:21.20.0")
 }

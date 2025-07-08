@@ -3,6 +3,7 @@ package com.avocado.glampe_mobile.di;
 import com.avocado.glampe_mobile.service.BookingService;
 import com.avocado.glampe_mobile.service.CampSiteService;
 import com.avocado.glampe_mobile.service.CampTypeService;
+import com.avocado.glampe_mobile.service.PaymentService;
 import com.avocado.glampe_mobile.service.UserService;
 
 public class ApiServiceFactory {
@@ -35,5 +36,9 @@ public class ApiServiceFactory {
 
     public BookingService getBookingService(){
         return retrofitClient.getRetrofit().create(BookingService.class);
+    }
+
+    public PaymentService getPaymentService(){
+        return retrofitClient.getRetrofit().create(PaymentService.class);
     }
 }

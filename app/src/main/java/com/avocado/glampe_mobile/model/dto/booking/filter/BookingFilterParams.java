@@ -3,6 +3,7 @@ package com.avocado.glampe_mobile.model.dto.booking.filter;
 import com.avocado.glampe_mobile.model.dto.PageRequest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class BookingFilterParams extends PageRequest {
     Long userId;
+    List<String> statusList;
 
 
     public Map<String, String> toMap() {

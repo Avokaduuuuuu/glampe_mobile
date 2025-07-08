@@ -129,7 +129,7 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
 
             tvSelectionName.setText(selection.getName());
             tvSelectionDescription.setText(selection.getDescription());
-            tvPrice.setText(PriceFormat.formatUsd(selection.getPrice()));
+            tvPrice.setText(PriceFormat.formatUsd(selection.getPrice().doubleValue()));
 
             updateQuantityDisplay();
         }

@@ -492,7 +492,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
                 if (value > 0) {
                     SelectionResponse selectionResponse = selectionMap.get(key);
                     if (selectionResponse != null) {
-                        addOnTotal = addOnTotal.add(BigDecimal.valueOf(value * selectionResponse.getPrice()));
+                        addOnTotal = addOnTotal.add(BigDecimal.valueOf(value * selectionResponse.getPrice().doubleValue()));
                     }
                 }
             });

@@ -17,12 +17,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBookings"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnActive"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_marginEnd="20dp"
+                android:text="Active"
+                android:textAllCaps="false"
+                android:textColor="#3F52B4"
+                app:cornerRadius="24dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/light_gray"
+                android:backgroundTint="@color/ripple_button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCompleted"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_marginEnd="20dp"
+                android:text="Completed"
+                android:textAllCaps="false"
+                android:textColor="#3F52B4"
+                app:cornerRadius="24dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/light_gray"
+                android:backgroundTint="@color/ripple_button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancled"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:text="Canceled"
+                android:textAllCaps="false"
+                android:textColor="#3F52B4"
+                app:cornerRadius="24dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/light_gray"
+                android:backgroundTint="@color/ripple_button" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBookings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

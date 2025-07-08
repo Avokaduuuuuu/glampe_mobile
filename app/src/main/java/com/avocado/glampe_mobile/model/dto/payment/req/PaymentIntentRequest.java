@@ -1,4 +1,5 @@
-package com.avocado.glampe_mobile.model.dto.selection.resp;
+package com.avocado.glampe_mobile.model.dto.payment.req;
+
 
 import java.math.BigDecimal;
 
@@ -12,15 +13,11 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SelectionResponse {
-    Integer id;
-    String name;
-    String description;
-    BigDecimal price;
-    String image;
-    Boolean isDeleted;
-    @Builder.Default
-    Integer selectedQuantity = 0;
+@Builder
+public class PaymentIntentRequest {
+    BigDecimal amount;
+    String currency;
+    Long bookingId;
+    String method;
 }

@@ -30,7 +30,7 @@ public class BookingRepository extends BaseRepository {
             MutableLiveData<PageResponse<BookingResponse>> successLiveData,
             MutableLiveData<String> errorMessage
     ){
-        executeCall(bookingService.fetchBookings(params.toMap()), successLiveData, errorMessage);
+        executeCall(bookingService.fetchBookings(params.getStatusList(),params.toMap()), successLiveData, errorMessage);
     }
 
     public void addBooking(

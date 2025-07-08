@@ -26,6 +26,7 @@ import com.avocado.glampe_mobile.model.dto.booking.resp.BookingResponse;
 import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 import com.avocado.glampe_mobile.viewModel.BookingViewModel;
 import com.avocado.glampe_mobile.viewModel.BottomNavViewModel;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ public class BookingFragment extends Fragment {
     BottomNavViewModel bottomNavViewModel;
     CardView cardView;
     NavController navController;
+
+    MaterialButton btnActive, btnCompleted, btnCanceled;
+    List<MaterialButton> btns;
 
     private List<BookingResponse> bookings = new ArrayList<>();
 
@@ -60,6 +64,9 @@ public class BookingFragment extends Fragment {
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
         cardView = view.findViewById(R.id.cardBooking);
         navController = Navigation.findNavController(view);
+        btnActive = view.findViewById(R.id.btnActive);
+        btnCompleted = view.findViewById(R.id.btnCompleted);
+        btnCanceled = view.findViewById(R.id.btnCancled);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -67,9 +74,11 @@ public class BookingFragment extends Fragment {
 
         initView(view);
         initViewModel();
-        observeFetchBookings(); // ← SETUP OBSERVER TRƯỚC
-        fetchBookings();        // ← GỌI API SAU
+        observeFetchBookings();
         setUpScrollView();
+        setUpButtons();
+
+        btnActive.performClick();
     }
 
     private void initViewModel(){
@@ -156,20 +165,57 @@ public class BookingFragment extends Fragment {
         Log.d("Fragment", "Observers setup completed");
     }
 
-    private void fetchBookings(){
+    private void fetchBookings(BookingFilterParams params){
         Log.d("Fragment", "About to call loadBookings...");
 
-        bookingViewModel.loadBookings(
-                BookingFilterParams.builder()
-                        .currentPage(0)
-                        .pageSize(10)
-                        .sortBy("id")
-                        .sortOrder("DESC")
-                        .userId(user.getUser().getId())
-                        .build()
-        );
+        bookingViewModel.loadBookings(params);
 
         Log.d("Fragment", "loadBookings called");
     }
 
+    private void setUpButtons() {
+        btns = List.of(btnActive, btnCompleted, btnCanceled);
+
+        btns.forEach(btn -> {
+            btn.setOnClickListener(v -> {
+
+                for (MaterialButton button : btns) {
+                    button.setSelected(false);
+                }
+                if (btn.getId() == R.id.btnActive) {
+                    fetchBookings(BookingFilterParams.builder()
+                            .currentPage(0)
+                            .pageSize(10)
+                            .sortBy("id")
+                            .sortOrder("DESC")
+                            .userId(user.getUser().getId())
+                            .statusList(List.of("Pending", "Deposit", "Accepted", "Check_In"))
+                            .build());
+                }
+
+                if (btn.getId() == R.id.btnCompleted) {
+                    fetchBookings(BookingFilterParams.builder()
+                            .currentPage(0)
+                            .pageSize(10)
+                            .sortBy("id")
+                            .sortOrder("DESC")
+                            .userId(user.getUser().getId())
+                            .statusList(List.of("Completed"))
+                            .build());
+                }
+
+                if (btn.getId() == R.id.btnCancled) {
+                    fetchBookings(BookingFilterParams.builder()
+                            .currentPage(0)
+                            .pageSize(10)
+                            .sortBy("id")
+                            .sortOrder("DESC")
+                            .userId(user.getUser().getId())
+                            .statusList(List.of("Denied", "Refund"))
+                            .build());
+                }
+                btn.setSelected(true);
+            });
+        });
+    }
 }

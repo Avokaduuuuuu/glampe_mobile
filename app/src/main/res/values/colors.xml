@@ -270,4 +270,6 @@
     <color name="text_secondary">#FF666666</color>
     <color name="range_selection_bg_white">#4D000000</color>
     <color name="drag_handle_color">#FFCCCCCC</color>
+
+    <color name="gray_icon">#666666</color>
 </resources>

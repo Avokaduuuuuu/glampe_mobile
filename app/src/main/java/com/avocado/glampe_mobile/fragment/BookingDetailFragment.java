@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,20 +23,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.avocado.glampe_mobile.BuildConfig;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.adapter.CampTypePriceAdapter;
 import com.avocado.glampe_mobile.adapter.SelectionPriceAdapter;
 import com.avocado.glampe_mobile.model.dto.booking.resp.BookingResponse;
 import com.avocado.glampe_mobile.model.dto.bookingdetail.resp.BookingDetailResponse;
 import com.avocado.glampe_mobile.model.dto.bookingdetail.resp.CombinedBookingDetailResponse;
+import com.avocado.glampe_mobile.model.dto.payment.req.PaymentIntentRequest;
+import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.avocado.glampe_mobile.viewModel.BookingViewModel;
+import com.avocado.glampe_mobile.viewModel.PaymentViewModel;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
+import com.stripe.android.payments.paymentlauncher.PaymentResult;
+import com.stripe.android.model.PaymentMethodCreateParams;
+import com.stripe.android.view.CardInputWidget;
+import com.stripe.android.model.ConfirmPaymentIntentParams;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class BookingDetailFragment extends Fragment {
 
@@ -45,19 +59,28 @@ public class BookingDetailFragment extends Fragment {
     NavController navController;
     LottieAnimationView loadingAnimation;
     NestedScrollView nestedScrollView;
-
+    FrameLayout loadingOverlay;
+    CardInputWidget cardInputWidget;
+    LinearLayout layoutPayment;
 
     private BookingResponse bookingResponse;
     private BookingViewModel bookingViewModel;
+    private PaymentViewModel paymentViewModel;
     private Long bookingId;
+    private BigDecimal total;
 
     private RecyclerView rvCampTypes, rvSelections;
     private CampTypePriceAdapter campTypePriceAdapter;
     private SelectionPriceAdapter selectionPriceAdapter;
 
+    private PaymentLauncher paymentLauncher;
+
+    private String clientSecret;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        PaymentConfiguration.init(requireContext(), BuildConfig.STRIPE_PUBLISH_KEY);
         return inflater.inflate(R.layout.fragment_booking_detail, container, false);
     }
 
@@ -65,14 +88,17 @@ public class BookingDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         initView(view);
-        onClickListener();
         initViewModel();
+        setupStripePaymentLauncher();
+        onClickListener();
         observeFetchBookingById();
         fetchBookingById();
     }
 
-    private void initView(View view){
+    private void initView(View view) {
         btnBack = view.findViewById(R.id.btnBack);
         btnContinueToPayment = view.findViewById(R.id.btnContinueToPayment);
         tvCampSiteName = view.findViewById(R.id.tvCampSiteName);
@@ -87,17 +113,158 @@ public class BookingDetailFragment extends Fragment {
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
         rvCampTypes = view.findViewById(R.id.rvCampTypes);
         rvSelections = view.findViewById(R.id.rvSelections);
+        loadingOverlay = view.findViewById(R.id.loadingOverlay);
+        cardInputWidget = view.findViewById(R.id.cardInputWidget);
+        layoutPayment = view.findViewById(R.id.layoutPayment);
     }
 
     private void initViewModel() {
         bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
+        paymentViewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
+    }
+
+    private void setupStripePaymentLauncher() {
+        paymentLauncher = PaymentLauncher.Companion.create(
+                this,
+                BuildConfig.STRIPE_PUBLISH_KEY,
+                paymentResult -> {
+                    if (paymentResult instanceof PaymentResult.Completed) {
+                        observerProcessCharge();
+                        paymentViewModel.processCharge(getPaymentIntentIdFromClientSecret(clientSecret));
+                        Toast.makeText(requireContext(), "Payment successful", Toast.LENGTH_SHORT).show();
+                    } else if (paymentResult instanceof PaymentResult.Canceled) {
+                        Toast.makeText(requireContext(), "Payment canceled", Toast.LENGTH_SHORT).show();
+                    } else if (paymentResult instanceof PaymentResult.Failed) {
+                        Toast.makeText(requireContext(), "Payment failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private String getPaymentIntentIdFromClientSecret(String clientSecret) {
+        if (clientSecret != null && clientSecret.startsWith("pi_")) {
+            int secretIndex = clientSecret.indexOf("_secret");
+            if (secretIndex != -1) {
+                return clientSecret.substring(0, secretIndex);
+            }
+        }
+        return null;
+    }
+
+
+    private void onClickListener() {
+        btnBack.setOnClickListener(v -> navController.navigate(R.id.action_bookingDetailFragment_to_bookingFragment));
+
+        btnContinueToPayment.setOnClickListener(v -> {
+            if (validateCardInput()) {
+                startPaymentFlow();
+            }
+        });
+    }
+
+    private boolean validateCardInput() {
+        return cardInputWidget.getPaymentMethodCard() != null;
+    }
+
+    private void startPaymentFlow() {
+        observerPaymentFlow();
+        paymentViewModel.createIntent(
+                PaymentIntentRequest.builder()
+                        .bookingId(bookingId)
+                        .amount(total)
+                        .currency("usd")
+                        .method("card")
+                        .build()
+        );
+    }
+
+    private void observerPaymentFlow() {
+        paymentViewModel.getCreateIntentLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading) {
+                loadingOverlay.setVisibility(View.VISIBLE);
+            }
+        });
+
+        paymentViewModel.getPaymentIntent().observe(getViewLifecycleOwner(), paymentIntent -> {
+            if (paymentIntent != null) {
+                Toast.makeText(requireContext(), "Create Intent Successfully", Toast.LENGTH_SHORT).show();
+                clientSecret = paymentIntent.getClientSecret();
+                confirmPayment(paymentIntent.getClientSecret());
+            }
+        });
+
+        paymentViewModel.getCreateIntentError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                loadingOverlay.setVisibility(View.GONE);
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void confirmPayment(String clientSecret) {
+        PaymentMethodCreateParams.Card paymentMethodCard = cardInputWidget.getPaymentMethodCard();
+        if (paymentMethodCard == null) {
+            Toast.makeText(requireContext(), "Invalid card details", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        PaymentMethodCreateParams paymentMethodParams = PaymentMethodCreateParams.create(paymentMethodCard, null);
+        com.stripe.android.model.ConfirmPaymentIntentParams confirmParams = com.stripe.android.model.ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(paymentMethodParams, clientSecret);
+        paymentLauncher.confirm(confirmParams);
+    }
+
+    private void observerProcessCharge() {
+        paymentViewModel.getProcessChargeLoading().observe(getViewLifecycleOwner(), loading -> {
+            if (loading != null && loading) {
+                loadingOverlay.setVisibility(View.VISIBLE);
+            }
+        });
+
+        paymentViewModel.getPaymentResponse().observe(getViewLifecycleOwner(), response -> {
+            if (response != null) {
+                navController.navigate(R.id.action_bookingDetailFragment_to_paymentSuccessFragment);
+            }
+        });
+
+        paymentViewModel.getProcessChargeError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                navController.navigate(R.id.action_bookingDetailFragment_to_paymentFailFragment);
+            }
+        });
+    }
+
+    private void fetchBookingById() {
+        if (getArguments() != null) {
+            bookingId = getArguments().getLong("bookingId");
+            bookingViewModel.fetchBookingById(bookingId);
+        }
+    }
+
+    private void observeFetchBookingById() {
+        bookingViewModel.getIsLoadingFetchById().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading) {
+                loadingAnimation.setVisibility(View.VISIBLE);
+                nestedScrollView.setVisibility(View.GONE);
+            }
+        });
+
+        bookingViewModel.getFetchedByIdBooking().observe(getViewLifecycleOwner(), booking -> {
+            if (booking != null) {
+                loadingAnimation.setVisibility(View.GONE);
+                nestedScrollView.setVisibility(View.VISIBLE);
+                bookingResponse = booking;
+                if (booking.getStatus().equals("Pending")) layoutPayment.setVisibility(View.VISIBLE);
+                updateView();
+            }
+        });
     }
 
     private void updateView() {
         tvCampSiteName.setText(bookingResponse.getCampSite().getName());
         tvAddress.setText(bookingResponse.getCampSite().getAddress());
         tvBookingDate.setText(formatDateRange(bookingResponse.getCheckInAt(), bookingResponse.getCheckOutAt()));
-        etFullName.setText(bookingResponse.getUser().getLastName() + " " + bookingResponse.getUser().getLastName());
+        etFullName.setText(bookingResponse.getUser().getLastName() + " " + bookingResponse.getUser().getFirstName());
         etEmail.setText(bookingResponse.getUser().getEmail());
         etPhone.setText(bookingResponse.getUser().getPhoneNumber());
 
@@ -105,13 +272,25 @@ public class BookingDetailFragment extends Fragment {
     }
 
     private void setUpAdapter() {
-        rvCampTypes.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-        campTypePriceAdapter = new CampTypePriceAdapter(combineBookingsDetails());
+        List<CombinedBookingDetailResponse> combinedBookingDetailResponses = combineBookingsDetails();
+        rvCampTypes.setLayoutManager(new LinearLayoutManager(requireContext()));
+        campTypePriceAdapter = new CampTypePriceAdapter(combinedBookingDetailResponses);
         rvCampTypes.setAdapter(campTypePriceAdapter);
 
-        rvSelections.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        rvSelections.setLayoutManager(new LinearLayoutManager(requireContext()));
         selectionPriceAdapter = new SelectionPriceAdapter(bookingResponse.getBookingSelections());
         rvSelections.setAdapter(selectionPriceAdapter);
+
+        total = combinedBookingDetailResponses.stream().map(CombinedBookingDetailResponse::getTotalAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(
+                        bookingResponse.getBookingSelections().stream()
+                                .map(bs -> bs.getSelection().getPrice().multiply(BigDecimal.valueOf(bs.getQuantity())))
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                );
+
+        tvTotalPrice.setText(PriceFormat.formatUsd(total.doubleValue()));
     }
 
     private List<CombinedBookingDetailResponse> combineBookingsDetails() {
@@ -138,44 +317,6 @@ public class BookingDetailFragment extends Fragment {
         return new ArrayList<>(map.values());
     }
 
-
-    private void onClickListener() {
-        btnBack.setOnClickListener(v -> {
-            navController.navigate(R.id.action_bookingDetailFragment_to_bookingFragment);
-        });
-    }
-
-
-    private void fetchBookingById() {
-        if (getArguments() != null) {
-            bookingId = getArguments().getLong("bookingId");
-
-            bookingViewModel.fetchBookingById(bookingId);
-        }
-    }
-
-    private void observeFetchBookingById() {
-        bookingViewModel.getIsLoadingFetchById().observe(getViewLifecycleOwner(), isLoading -> {
-            if (isLoading != null) {
-                if (isLoading) {
-                    loadingAnimation.setVisibility(View.VISIBLE);
-                    nestedScrollView.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        bookingViewModel.getFetchedByIdBooking().observe(getViewLifecycleOwner(), booking -> {
-            if (booking != null) {
-                loadingAnimation.setVisibility(View.GONE);
-                nestedScrollView.setVisibility(View.VISIBLE);
-
-                this.bookingResponse = booking;
-                updateView();
-            }
-        });
-    }
-
-
     public static String formatDateRange(LocalDateTime start, LocalDateTime end) {
         DateTimeFormatter monthDayFormatter = DateTimeFormatter.ofPattern("MMM d");
         DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
@@ -191,5 +332,4 @@ public class BookingDetailFragment extends Fragment {
                     end.format(fullFormatter));
         }
     }
-
 }
