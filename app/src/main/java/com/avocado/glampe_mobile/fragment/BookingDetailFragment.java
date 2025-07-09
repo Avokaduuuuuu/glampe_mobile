@@ -35,6 +35,7 @@ import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.avocado.glampe_mobile.viewModel.BookingViewModel;
 import com.avocado.glampe_mobile.viewModel.PaymentViewModel;
 import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.core.exception.StripeException;
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 import com.stripe.android.payments.paymentlauncher.PaymentResult;
 import com.stripe.android.model.PaymentMethodCreateParams;
@@ -90,6 +91,7 @@ public class BookingDetailFragment extends Fragment {
 
 
 
+
         initView(view);
         initViewModel();
         setupStripePaymentLauncher();
@@ -116,6 +118,8 @@ public class BookingDetailFragment extends Fragment {
         loadingOverlay = view.findViewById(R.id.loadingOverlay);
         cardInputWidget = view.findViewById(R.id.cardInputWidget);
         layoutPayment = view.findViewById(R.id.layoutPayment);
+
+        nestedScrollView.requestFocus();
     }
 
     private void initViewModel() {
@@ -135,7 +139,33 @@ public class BookingDetailFragment extends Fragment {
                     } else if (paymentResult instanceof PaymentResult.Canceled) {
                         Toast.makeText(requireContext(), "Payment canceled", Toast.LENGTH_SHORT).show();
                     } else if (paymentResult instanceof PaymentResult.Failed) {
+                        PaymentResult.Failed failedResult = (PaymentResult.Failed) paymentResult;
+                        Throwable error = failedResult.getThrowable();
+
+                        String errorCode = "UNKNOWN";
+                        String errorMessage = "An unexpected error occurred";
+                        String transactionId = getPaymentIntentIdFromClientSecret(clientSecret); // optional
+
+                        if (error instanceof StripeException) {
+                            StripeException stripeException = (StripeException) error;
+                            if (stripeException.getStripeError() != null) {
+                                errorCode = stripeException.getStripeError().getCode(); // e.g. card_declined
+                                errorMessage = stripeException.getStripeError().getMessage(); // detailed reason
+                            } else {
+                                errorMessage = stripeException.getMessage();
+                            }
+                        }
                         Toast.makeText(requireContext(), "Payment failed", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("bookingId", bookingId.toString());
+                        bundle.putString("campSiteName", bookingResponse.getCampSite().getName());
+                        bundle.putDouble("totalAmount", total.doubleValue());
+                        bundle.putString("bookingDates", formatDateRange(bookingResponse.getCheckInAt(), bookingResponse.getCheckOutAt()));
+                        bundle.putString("errorMessage", errorMessage);
+                        bundle.putString("errorCode", errorCode);
+                        bundle.putString("transactionId", transactionId);
+
+                        navController.navigate(R.id.action_bookingDetailFragment_to_paymentFailFragment, bundle);
                     }
                 }
         );
@@ -222,7 +252,12 @@ public class BookingDetailFragment extends Fragment {
 
         paymentViewModel.getPaymentResponse().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
-                navController.navigate(R.id.action_bookingDetailFragment_to_paymentSuccessFragment);
+                Bundle bundle = new Bundle();
+                bundle.putString("bookingId", bookingId.toString());
+                bundle.putString("campSiteName", bookingResponse.getCampSite().getName());
+                bundle.putDouble("totalAmount", total.doubleValue());
+                bundle.putString("bookingDates", formatDateRange(bookingResponse.getCheckInAt(), bookingResponse.getCheckOutAt()));
+                navController.navigate(R.id.action_bookingDetailFragment_to_paymentSuccessFragment, bundle);
             }
         });
 

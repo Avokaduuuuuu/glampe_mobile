@@ -12,6 +12,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,9 @@ public class RetrofitClient {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer()) // For serialize
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
                 .create();
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -82,4 +85,28 @@ public class RetrofitClient {
             return new JsonPrimitive(src.format(formatter));
         }
     }
+
+    public class LocalDateDeserializer implements JsonDeserializer<LocalDate> {
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        @Override
+        public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+            try {
+                return LocalDate.parse(json.getAsString(), formatter);
+            } catch (Exception e) {
+                Log.e("LocalDate", "Parse error: " + e.getMessage());
+                return null;
+            }
+        }
+    }
+
+    public class LocalDateSerializer implements JsonSerializer<LocalDate> {
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        @Override
+        public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.format(formatter));
+        }
+    }
+
 }

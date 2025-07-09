@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.avocado.glampe_mobile.BuildConfig;
 import com.avocado.glampe_mobile.R;
@@ -50,6 +52,9 @@ public class AuthenticationFragment extends Fragment {
 
     ProgressBar progressBar;
     FrameLayout loadingOverlay;
+    NavController navController;
+
+    private String email;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -66,7 +71,8 @@ public class AuthenticationFragment extends Fragment {
                             if (task.isSuccessful()){
                                 auth = FirebaseAuth.getInstance();
                                 Log.d("User email", auth.getCurrentUser().getEmail());
-                                userViewModel.verifyUser(UserVerifyRequest.builder().email(auth.getCurrentUser().getEmail()).build());
+                                email = auth.getCurrentUser().getEmail();
+                                userViewModel.verifyUser(UserVerifyRequest.builder().email(email).build());
                                 observeVerifyUser();
                             }else{
                                 Toast.makeText(requireContext(), "Failed to sign in", Toast.LENGTH_SHORT).show();
@@ -105,6 +111,7 @@ public class AuthenticationFragment extends Fragment {
         googleSignInButton = view.findViewById(R.id.googleSignInButton);
         progressBar = view.findViewById(R.id.progressBar);
         loadingOverlay = view.findViewById(R.id.loadingOverlay);
+        navController = Navigation.findNavController(view);
     }
 
     private void initViewModel(){
@@ -139,6 +146,12 @@ public class AuthenticationFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void navigateToCreateAccount() {
+        Bundle bundle = new Bundle();
+        bundle.putString("email", email);
+        navController.navigate(R.id.action_fragmentAuthentication_to_createAccountFragment, bundle);
+    }
+
     private void observeVerifyUser(){
         userViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
@@ -153,8 +166,12 @@ public class AuthenticationFragment extends Fragment {
         userViewModel.getAuthUser().observe(getViewLifecycleOwner(), authUser -> {
             if (authUser != null) {
                 loadingOverlay.setVisibility(View.GONE);
-                AuthManager.saveAuthResponse(requireContext(), authUser);
-                navigateToMain();
+                if (!authUser.getIsNew()) {
+                    AuthManager.saveAuthResponse(requireContext(), authUser);
+                    navigateToMain();
+                }else {
+                    navigateToCreateAccount();
+                }
             }
         });
 

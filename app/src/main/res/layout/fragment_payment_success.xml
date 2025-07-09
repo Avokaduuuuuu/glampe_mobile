@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,7 +118,7 @@
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/bookingId"
+                            android:id="@+id/tvBookingId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="#BK123456789"
@@ -141,12 +142,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Trip"
+                            android:text="Campsite"
                             android:textSize="14sp"
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/tripName"
+                            android:id="@+id/tvCampSiteName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -173,38 +174,11 @@
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/bookingDates"
+                            android:id="@+id/tvBookingDates"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Jan 16 - Jan 20, 2025"
-                            android:textSize="14sp"
-                            android:textColor="@color/black"
-                            android:gravity="end"/>
-
-                    </LinearLayout>
-
-                    <!-- Guests -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Guests"
-                            android:textSize="14sp"
-                            android:textColor="#666666"/>
-
-                        <TextView
-                            android:id="@+id/guestInfo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="2 Adults, 1 Child"
                             android:textSize="14sp"
                             android:textColor="@color/black"
                             android:gravity="end"/>
@@ -233,7 +207,7 @@
                             android:textColor="@color/black"/>
 
                         <TextView
-                            android:id="@+id/totalAmount"
+                            android:id="@+id/tvTotalAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$5,012"

@@ -94,4 +94,5 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.stripe:stripe-android:21.20.0")
+    implementation("com.hbb20:ccp:2.5.0")
 }

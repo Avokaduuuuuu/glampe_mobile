@@ -9,5 +9,14 @@
         android:id="@+id/fragmentAuthentication"
         android:name="com.avocado.glampe_mobile.fragment.AuthenticationFragment"
         android:label="AuthenticationFragment"
-        tools:layout="@layout/fragment_authentication"/>
+        tools:layout="@layout/fragment_authentication">
+        <action
+            android:id="@+id/action_fragmentAuthentication_to_createAccountFragment"
+            app:destination="@id/createAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAccountFragment"
+        android:name="com.avocado.glampe_mobile.fragment.CreateAccountFragment"
+        android:label="CreateAccountFragment"
+        tools:layout="@layout/fragment_create_account"/>
 </navigation>

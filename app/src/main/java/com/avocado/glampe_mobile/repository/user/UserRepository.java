@@ -3,6 +3,7 @@ package com.avocado.glampe_mobile.repository.user;
 import androidx.lifecycle.MutableLiveData;
 
 import com.avocado.glampe_mobile.di.ApiServiceFactory;
+import com.avocado.glampe_mobile.model.dto.user.req.UserCreateRequest;
 import com.avocado.glampe_mobile.model.dto.user.req.UserVerifyRequest;
 import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 import com.avocado.glampe_mobile.repository.BaseRepository;
@@ -28,5 +29,11 @@ public class UserRepository extends BaseRepository {
                            MutableLiveData<AuthUserResponse> successLiveData,
                            MutableLiveData<String> errorMessage){
         executeCall(userService.verifyUser(request), successLiveData, errorMessage);
+    }
+
+    public void createUser(UserCreateRequest request,
+                           MutableLiveData<AuthUserResponse> successLiveData,
+                           MutableLiveData<String> errorMessage){
+        executeCall(userService.addUser(request), successLiveData, errorMessage);
     }
 }

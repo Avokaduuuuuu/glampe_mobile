@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="#FFFFFF">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header with back button and title -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:background="#FFFFFF"
+                android:elevation="2dp">
+
+                <!-- Back button -->
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- Title (centered) -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Personal Information"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="40dp" />
+
+            </LinearLayout>
+
+            <!-- Content Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Header Text -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Please fill in your details to create your account and enjoy our services."
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="40dp" />
+
+                <!-- First Name -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="First Name"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/border_edittext"
+                        android:drawableStart="@drawable/ic_personal"
+                        android:drawablePadding="12dp"
+                        android:drawableTint="#666666"
+                        android:hint="First Name"
+                        android:inputType="textPersonName"
+                        android:paddingHorizontal="20dp"
+                        android:textColorHint="#AAAAAA"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Last Name -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Last Name"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/border_edittext"
+                        android:hint="Last Name"
+                        android:textColorHint="#AAAAAA"
+                        android:paddingHorizontal="20dp"
+                        android:textSize="16sp"
+                        android:inputType="textPersonName"
+                        android:drawableStart="@drawable/ic_personal"
+                        android:drawablePadding="12dp"
+                        android:drawableTint="#666666" />
+                </LinearLayout>
+
+                <!-- Email -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/border_edittext"
+                        android:hint="Email"
+                        android:textColorHint="#AAAAAA"
+                        android:paddingHorizontal="20dp"
+                        android:textSize="16sp"
+                        android:inputType="textEmailAddress"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawablePadding="12dp"
+                        android:drawableTint="#666666"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:backgroundTint="@color/disabled_gray"/>
+                </LinearLayout>
+
+                <!-- Address -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/border_edittext"
+                        android:hint="Address"
+                        android:textColorHint="#AAAAAA"
+                        android:paddingHorizontal="20dp"
+                        android:textSize="16sp"
+                        android:inputType="textPostalAddress"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawablePadding="12dp"
+                        android:drawableTint="#666666" />
+                </LinearLayout>
+
+                <!-- Phone -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <!-- Phone input with Country Code Picker -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/border_edittext"
+                        android:gravity="center_vertical">
+
+                        <!-- Country Code Picker -->
+                        <com.hbb20.CountryCodePicker
+                            android:id="@+id/ccp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            app:ccp_showNameCode="false"
+                            app:ccp_showPhoneCode="true"
+                            app:ccp_defaultNameCode="VN"
+                            app:ccp_autoDetectCountry="true"
+                            app:ccp_showFlag="true"
+                            app:ccp_textSize="16sp"
+                            app:ccp_contentColor="#000000"
+                            app:ccp_arrowColor="#666666"
+                            />
+
+                        <!-- Vertical divider -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="32dp"
+                            android:background="#E0E0E0"
+                            android:layout_marginVertical="12dp" />
+
+                        <!-- Phone number input -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etPhone"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="Phone Number"
+                            android:textColorHint="#AAAAAA"
+                            android:paddingHorizontal="16dp"
+                            android:textSize="16sp"
+                            android:inputType="phone"
+                            android:maxLength="15" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Date of Birth -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date of Birth"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etDateOfBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/border_edittext"
+                        android:hint="DD/MM/YYYY"
+                        android:textColorHint="#AAAAAA"
+                        android:paddingHorizontal="20dp"
+                        android:textSize="16sp"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="12dp"
+                        android:drawableTint="#666666" />
+                </LinearLayout>
+
+                <!-- Save Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Save"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background"
+                    android:stateListAnimator="@animator/button_scale"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#AA000000"
+        android:visibility="gone"
+        android:elevation="1000dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingOverlayAnimation"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="loading.json"/>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

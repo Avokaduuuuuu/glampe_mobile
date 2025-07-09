@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
     Set<Integer> destinationsWithoutBottomNav = new HashSet<>(Arrays.asList(
             R.id.campSiteDetailFragment,
             R.id.profileInfoFragment,
-            R.id.bookingDetailFragment
+            R.id.bookingDetailFragment,
+            R.id.paymentFailFragment,
+            R.id.paymentSuccessFragment
     ));
 
 
