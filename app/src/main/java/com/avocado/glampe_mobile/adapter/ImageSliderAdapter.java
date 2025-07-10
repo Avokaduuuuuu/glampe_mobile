@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avocado.glampe_mobile.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
     @Override
     public void onBindViewHolder(@NonNull ImageSliderAdapter.ImageViewHolder holder, int i) {
         Glide.with(holder.itemView.getContext())
+                .asBitmap()
                 .load(urls.get(i))
                 .placeholder(R.drawable.place_holder_image)
                 .into(holder.shapeableImageView);

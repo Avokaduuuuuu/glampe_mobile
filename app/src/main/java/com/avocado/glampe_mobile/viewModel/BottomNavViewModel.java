@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class BottomNavViewModel extends ViewModel {
-    private MutableLiveData<Boolean> bottomNavVisible = new MutableLiveData<>(true);
+    private final MutableLiveData<Boolean> bottomNavVisible = new MutableLiveData<>(true);
 
     public LiveData<Boolean> getBottomNavVisible(){
         return bottomNavVisible;

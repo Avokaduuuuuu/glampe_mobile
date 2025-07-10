@@ -13,13 +13,13 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    Integer id;
+    Long id;
     String email;
     String firstName;
     String lastName;
     String address;
-    String phone;
-    String birthday;
+    String phoneNumber;
+    String dob;
     Boolean status;
     String role;
     String connectionId;

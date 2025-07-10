@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     Set<Integer> destinationsWithoutBottomNav = new HashSet<>(Arrays.asList(
             R.id.campSiteDetailFragment,
-            R.id.profileInfoFragment
+            R.id.profileInfoFragment,
+            R.id.bookingDetailFragment,
+            R.id.paymentFailFragment,
+            R.id.paymentSuccessFragment
     ));
 
 
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else bottomNavigationView.setVisibility(View.VISIBLE);
             });
+
             observeBottomNavVisibility();
         } else throw new IllegalStateException("NavHostFragment not found");
     }

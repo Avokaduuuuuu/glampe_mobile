@@ -19,7 +19,11 @@
         android:id="@+id/bookingFragment"
         android:name="com.avocado.glampe_mobile.fragment.BookingFragment"
         android:label="BookingFragment"
-        tools:layout="@layout/fragment_booking"/>
+        tools:layout="@layout/fragment_booking">
+        <action
+            android:id="@+id/action_bookingFragment_to_bookingDetailFragment"
+            app:destination="@id/bookingDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/inboxFragment"
         android:name="com.avocado.glampe_mobile.fragment.InboxFragment"
@@ -43,5 +47,36 @@
         android:id="@+id/campSiteDetailFragment"
         android:name="com.avocado.glampe_mobile.fragment.CampSiteDetailFragment"
         android:label="CampSiteDetailFragment"
-        tools:layout="@layout/fragment_camp_site_detail"/>
+        tools:layout="@layout/fragment_camp_site_detail">
+        <action
+            android:id="@+id/action_campSiteDetailFragment_to_bookingDetailFragment"
+            app:destination="@id/bookingDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookingDetailFragment"
+        android:name="com.avocado.glampe_mobile.fragment.BookingDetailFragment"
+        android:label="BookingDetailFragment"
+        tools:layout="@layout/fragment_booking_detail">
+        <action
+            android:id="@+id/action_bookingDetailFragment_to_bookingFragment"
+            app:destination="@id/bookingFragment"
+            app:popUpTo="@id/app_graph"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_bookingDetailFragment_to_paymentSuccessFragment"
+            app:destination="@id/paymentSuccessFragment" />
+        <action
+            android:id="@+id/action_bookingDetailFragment_to_paymentFailFragment"
+            app:destination="@id/paymentFailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentSuccessFragment"
+        android:name="com.avocado.glampe_mobile.fragment.PaymentSuccessFragment"
+        android:label="PaymentSuccessFragment"
+        tools:layout="@layout/fragment_payment_success"/>
+    <fragment
+        android:id="@+id/paymentFailFragment"
+        android:name="com.avocado.glampe_mobile.fragment.PaymentFailFragment"
+        android:label="PaymentFailFragment"
+        tools:layout="@layout/fragment_payment_fail"/>
 </navigation>

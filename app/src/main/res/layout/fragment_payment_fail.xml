@@ -117,7 +117,7 @@
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/errorCode"
+                            android:id="@+id/tvErrorCode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ERR_4001"
@@ -146,7 +146,7 @@
                             android:layout_marginBottom="4dp"/>
 
                         <TextView
-                            android:id="@+id/errorMessage"
+                            android:id="@+id/tvErrorMessage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Your card was declined. Please check your card details or try a different payment method."
@@ -170,7 +170,7 @@
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/transactionId"
+                            android:id="@+id/tvTransactionId"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -208,6 +208,34 @@
                         android:textColor="@color/black"
                         android:layout_marginBottom="16dp"/>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Booking ID"
+                            android:textSize="14sp"
+                            android:textColor="#666666"/>
+
+                        <TextView
+                            android:id="@+id/tvBookingId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="#BK123456789"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:background="@drawable/booking_id_background"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"/>
+
+                    </LinearLayout>
+
                     <!-- Trip Name -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -219,12 +247,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Trip"
+                            android:text="Campsite"
                             android:textSize="14sp"
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/tripName"
+                            android:id="@+id/tvCampSiteName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -251,7 +279,7 @@
                             android:textColor="#666666"/>
 
                         <TextView
-                            android:id="@+id/bookingDates"
+                            android:id="@+id/tvBookingDates"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -262,32 +290,6 @@
 
                     </LinearLayout>
 
-                    <!-- Guests -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Guests"
-                            android:textSize="14sp"
-                            android:textColor="#666666"/>
-
-                        <TextView
-                            android:id="@+id/guestInfo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="2 Adults, 1 Child"
-                            android:textSize="14sp"
-                            android:textColor="@color/black"
-                            android:gravity="end"/>
-
-                    </LinearLayout>
 
                     <!-- Total Amount -->
                     <View
@@ -311,7 +313,7 @@
                             android:textColor="@color/black"/>
 
                         <TextView
-                            android:id="@+id/totalAmount"
+                            android:id="@+id/tvTotalAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$5,012"
@@ -395,18 +397,6 @@
                     android:backgroundTint="@color/primary_color"
                     android:layout_marginBottom="12dp"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnChangePayment"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Try Different Payment Method"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    app:cornerRadius="28dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    app:strokeColor="@color/primary_color"
-                    android:textColor="@color/primary_color"
-                    android:layout_marginBottom="12dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

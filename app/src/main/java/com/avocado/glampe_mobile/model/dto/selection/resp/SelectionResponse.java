@@ -1,5 +1,7 @@
 package com.avocado.glampe_mobile.model.dto.selection.resp;
 
+import java.math.BigDecimal;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +18,9 @@ public class SelectionResponse {
     Integer id;
     String name;
     String description;
-    Double price;
+    BigDecimal price;
     String image;
-    Boolean status;
+    Boolean isDeleted;
+    @Builder.Default
+    Integer selectedQuantity = 0;
 }
