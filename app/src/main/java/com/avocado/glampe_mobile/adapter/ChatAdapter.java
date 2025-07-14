@@ -29,8 +29,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final SimpleDateFormat timeFmt =
             new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+    // Callback interface for scroll events
+    public interface OnNewMessageListener {
+        void onNewMessageAdded(int position, boolean shouldScrollToBottom);
+    }
+
+    private OnNewMessageListener onNewMessageListener;
+    private RecyclerView recyclerView;
+
     public ChatAdapter(Long userId) {
         this.userId = userId;
+    }
+
+    // Set the callback listener
+    public void setOnNewMessageListener(OnNewMessageListener listener) {
+        this.onNewMessageListener = listener;
+    }
+
+    // Override onAttachedToRecyclerView to get reference to RecyclerView
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
     @NonNull
@@ -63,12 +83,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-
     @Override
     public int getItemCount() {
         return messages.size();
     }
-
 
     private static class SentVH extends RecyclerView.ViewHolder {
         TextView content, time;
@@ -88,11 +106,89 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    // Updated method with auto-scroll functionality
     public void appendList(List<ChatMessageDto> newList) {
+        boolean wasAtBottom = isAtBottom();
+        int oldSize = messages.size();
+
         messages.clear();
         messages.addAll(newList);
         messages.sort(Comparator.comparingLong(ChatMessageDto::getTimestamp));
+
         notifyDataSetChanged();
+
+        // Auto scroll to bottom if:
+        // 1. This is the first load (oldSize == 0)
+        // 2. User was already at bottom
+        // 3. Or we have new messages
+        if (oldSize == 0 || wasAtBottom || newList.size() > oldSize) {
+            scrollToBottom();
+        }
+
+        // Notify listener if set
+        if (onNewMessageListener != null && !messages.isEmpty()) {
+            onNewMessageListener.onNewMessageAdded(
+                    messages.size() - 1,
+                    oldSize == 0 || wasAtBottom
+            );
+        }
+    }
+
+    // Method to add a single new message (more efficient for real-time chat)
+    public void addNewMessage(ChatMessageDto message) {
+        boolean wasAtBottom = isAtBottom();
+
+        messages.add(message);
+        messages.sort(Comparator.comparingLong(ChatMessageDto::getTimestamp));
+
+        int newPosition = messages.size() - 1;
+        notifyItemInserted(newPosition);
+
+        // Auto scroll to bottom
+        if (wasAtBottom) {
+            scrollToBottom();
+        }
+
+        // Notify listener
+        if (onNewMessageListener != null) {
+            onNewMessageListener.onNewMessageAdded(newPosition, wasAtBottom);
+        }
+    }
+
+    // Check if RecyclerView is currently scrolled to bottom
+    private boolean isAtBottom() {
+        if (recyclerView == null || messages.isEmpty()) {
+            return true; // Consider empty list as "at bottom"
+        }
+
+        // Check if last item is visible
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (layoutManager == null) return true;
+
+        // Get the position of the last visible item
+        int lastVisiblePosition = -1;
+        if (layoutManager instanceof androidx.recyclerview.widget.LinearLayoutManager) {
+            androidx.recyclerview.widget.LinearLayoutManager linearLayoutManager =
+                    (androidx.recyclerview.widget.LinearLayoutManager) layoutManager;
+            lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+        }
+
+        // Consider "at bottom" if last item is visible or we're close to it
+        return lastVisiblePosition >= messages.size() - 2;
+    }
+
+    // Scroll to bottom method
+    private void scrollToBottom() {
+        if (recyclerView != null && !messages.isEmpty()) {
+            recyclerView.post(() -> {
+                recyclerView.smoothScrollToPosition(messages.size() - 1);
+            });
+        }
+    }
+
+    // Public method to manually scroll to bottom
+    public void scrollToBottomManually() {
+        scrollToBottom();
     }
 
     @Override

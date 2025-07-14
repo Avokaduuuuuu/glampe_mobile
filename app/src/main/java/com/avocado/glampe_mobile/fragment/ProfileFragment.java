@@ -70,6 +70,8 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             tvEmail.setText(user.getUser().getEmail());
             tvFirstName.setText(user.getUser().getFirstName());
+            bookingHistory.setVisibility(View.GONE);
+            security.setVisibility(View.GONE);
         } else {
             layoutFunction.setVisibility(View.GONE);
             layoutNotLogin.setVisibility(View.VISIBLE);
