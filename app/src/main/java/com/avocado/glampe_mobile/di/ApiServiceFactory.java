@@ -3,7 +3,9 @@ package com.avocado.glampe_mobile.di;
 import com.avocado.glampe_mobile.service.BookingService;
 import com.avocado.glampe_mobile.service.CampSiteService;
 import com.avocado.glampe_mobile.service.CampTypeService;
+import com.avocado.glampe_mobile.service.ChatService;
 import com.avocado.glampe_mobile.service.PaymentService;
+import com.avocado.glampe_mobile.service.PlaceTypeService;
 import com.avocado.glampe_mobile.service.UserService;
 
 public class ApiServiceFactory {
@@ -40,5 +42,13 @@ public class ApiServiceFactory {
 
     public PaymentService getPaymentService(){
         return retrofitClient.getRetrofit().create(PaymentService.class);
+    }
+
+    public PlaceTypeService getPlaceTypeService() {
+        return retrofitClient.getRetrofit().create(PlaceTypeService.class);
+    }
+
+    public ChatService  getChatService() {
+        return retrofitClient.getRetrofit().create(ChatService.class);
     }
 }

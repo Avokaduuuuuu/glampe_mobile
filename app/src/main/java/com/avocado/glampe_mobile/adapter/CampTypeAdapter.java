@@ -1,6 +1,7 @@
 package com.avocado.glampe_mobile.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,26 @@ import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
 //import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Map;
 
 public class CampTypeAdapter extends RecyclerView.Adapter<CampTypeAdapter.CampTypeViewHolder> {
 
+    public void applySavedQuantities(Map<Long, Integer> savedQuantities) {
+        Log.d("CampTypeAdapter", "🔄 Applying saved quantities: " + savedQuantities.size() + " items");
+
+        for (int i = 0; i < campTypes.size(); i++) {
+            CampTypeResponse campType = campTypes.get(i);
+            Integer savedQuantity = savedQuantities.get(campType.getId());
+
+            int newQuantity = (savedQuantity != null) ? savedQuantity : 0;
+            campType.setSelectedQuantity(newQuantity);
+
+            Log.d("CampTypeAdapter", "   - " + campType.getType() + ": " + newQuantity);
+        }
+
+        notifyDataSetChanged();
+        Log.d("CampTypeAdapter", "✅ Saved quantities applied");
+    }
     public interface OnCampTypeListener {
         void onQuantityChanged(CampTypeResponse campType, int newQuantity);
         void onCampTypeSelected(CampTypeResponse campType);

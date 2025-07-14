@@ -24,6 +24,7 @@ public class CampSiteFilterParams extends PageRequest {
     private String address;
     private String city;
     private String status;
+    private Long placeTypeId;
 
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
@@ -34,6 +35,7 @@ public class CampSiteFilterParams extends PageRequest {
         if (this.getStatus() != null) map.put("status", this.getStatus());
         if (this.getCity() != null) map.put("city", this.getCity());
         if (this.getName() != null) map.put("name", this.getName());
+        if (this.placeTypeId != null) map.put("placeTypeId", this.getPlaceTypeId().toString());
         return map;
     }
 

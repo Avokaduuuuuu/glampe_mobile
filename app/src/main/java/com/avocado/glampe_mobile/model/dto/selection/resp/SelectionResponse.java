@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SelectionResponse {
-    Integer id;
+    Long id;
     String name;
     String description;
     BigDecimal price;

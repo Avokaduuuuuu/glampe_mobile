@@ -1,5 +1,6 @@
 package com.avocado.glampe_mobile.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,26 @@ import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
+import java.util.Map;
 
 public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.SelectionViewHolder> {
+
+    public void applySavedQuantities(Map<Long, Integer> savedQuantities) {
+        Log.d("SelectionAdapter", "🔄 Applying saved quantities: " + savedQuantities.size() + " items");
+
+        for (int i = 0; i < selections.size(); i++) {
+            SelectionResponse selection = selections.get(i);
+            Integer savedQuantity = savedQuantities.get(selection.getId());
+
+            int newQuantity = (savedQuantity != null) ? savedQuantity : 0;
+            selection.setSelectedQuantity(newQuantity);
+
+            Log.d("SelectionAdapter", "   - " + selection.getName() + ": " + newQuantity);
+        }
+
+        notifyDataSetChanged();
+        Log.d("SelectionAdapter", "✅ Saved quantities applied");
+    }
 
     public interface OnSelectionListener{
         void onQuantityChanged(SelectionResponse selectionResponse, int newQuantity);

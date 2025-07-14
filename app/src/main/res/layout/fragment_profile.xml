@@ -40,7 +40,7 @@
                     android:id="@+id/tvFirstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tan Thinh"
+                    android:text="Username"
                     android:textSize="@dimen/text_medium"
                     android:textStyle="bold" />
 
@@ -53,6 +53,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutFunction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -160,6 +161,37 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutNotLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingHorizontal="30dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/layoutLogin"
+                    style="@style/MenuItemStyle"
+                    android:background="@drawable/border_layout"
+                    android:layout_marginTop="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_login" />
+
+                    <TextView
+                        style="@style/h2"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Login"
+                        android:textColor="@color/primary_color"/>
+
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
