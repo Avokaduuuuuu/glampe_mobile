@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/category_item_padding"
+    android:gravity="center"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:focusable="true"
+    android:minWidth="@dimen/category_min_width">
+
+    <!-- Category Icon -->
+    <ImageView
+        android:id="@+id/ivPlaceType"
+        android:layout_width="@dimen/category_icon_size"
+        android:layout_height="@dimen/category_icon_size"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:src="@drawable/ic_broken_image"
+        android:contentDescription="Category Icon"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Category Name -->
+    <TextView
+        android:id="@+id/tvPlaceTypeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textSize="@dimen/text_size_category_name"
+        android:textColor="#717171"
+        android:textAlignment="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Selection Indicator -->
+    <View
+        android:id="@+id/selectionIndicator"
+        android:layout_width="@dimen/category_indicator_width"
+        android:layout_height="@dimen/category_indicator_height"
+        android:background="#222222"
+        android:layout_marginTop="@dimen/margin_small"
+        android:visibility="invisible" />
+
+</LinearLayout>

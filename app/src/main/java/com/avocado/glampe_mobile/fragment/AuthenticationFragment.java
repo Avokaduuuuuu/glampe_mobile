@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,9 @@ import com.avocado.glampe_mobile.BuildConfig;
 import com.avocado.glampe_mobile.R;
 import com.avocado.glampe_mobile.activity.MainActivity;
 import com.avocado.glampe_mobile.di.AuthManager;
+import com.avocado.glampe_mobile.model.dto.fcmtoken.req.FcmTokenUpdateRequest;
 import com.avocado.glampe_mobile.model.dto.user.req.UserVerifyRequest;
+import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 import com.avocado.glampe_mobile.viewModel.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,8 +45,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AuthenticationFragment extends Fragment {
+    private static final String TAG = "FCM_TOKEN";
+    private String fcmToken = "";
 
     LinearLayout guestBrowseButton, googleSignInButton;
     FirebaseAuth auth;
@@ -70,6 +76,7 @@ public class AuthenticationFragment extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
                                 auth = FirebaseAuth.getInstance();
+                                getFcmToken();
                                 Log.d("User email", auth.getCurrentUser().getEmail());
                                 email = auth.getCurrentUser().getEmail();
                                 userViewModel.verifyUser(UserVerifyRequest.builder().email(email).build());
@@ -168,6 +175,7 @@ public class AuthenticationFragment extends Fragment {
                 loadingOverlay.setVisibility(View.GONE);
                 if (!authUser.getIsNew()) {
                     AuthManager.saveAuthResponse(requireContext(), authUser);
+                    saveFcmToken(authUser);
                     navigateToMain();
                 }else {
                     navigateToCreateAccount();
@@ -179,6 +187,42 @@ public class AuthenticationFragment extends Fragment {
             if (error != null) {
                 googleSignInButton.setEnabled(true);
                 guestBrowseButton.setEnabled(true);
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveFcmToken(AuthUserResponse user) {
+        String deviceId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        userViewModel.saveFcmToken(
+                FcmTokenUpdateRequest.builder()
+                        .userId(user.getUser().getId())
+                        .token(fcmToken)
+                        .deviceId(deviceId)
+                        .build()
+        );
+    }
+
+    private void getFcmToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        fcmToken = task.getResult();
+                        Log.d(TAG, "FcmToken: " + fcmToken);
+
+                    }
+                });
+    }
+
+    private void observeSaveFcmToken() {
+        userViewModel.getFcmTokenError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });

@@ -3,6 +3,8 @@ package com.avocado.glampe_mobile.repository.user;
 import androidx.lifecycle.MutableLiveData;
 
 import com.avocado.glampe_mobile.di.ApiServiceFactory;
+import com.avocado.glampe_mobile.model.dto.fcmtoken.req.FcmTokenUpdateRequest;
+import com.avocado.glampe_mobile.model.dto.fcmtoken.resp.FcmTokenResponse;
 import com.avocado.glampe_mobile.model.dto.user.req.UserCreateRequest;
 import com.avocado.glampe_mobile.model.dto.user.req.UserVerifyRequest;
 import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
@@ -35,5 +37,17 @@ public class UserRepository extends BaseRepository {
                            MutableLiveData<AuthUserResponse> successLiveData,
                            MutableLiveData<String> errorMessage){
         executeCall(userService.addUser(request), successLiveData, errorMessage);
+    }
+
+    public void saveFcmToken(FcmTokenUpdateRequest request,
+                             MutableLiveData<FcmTokenResponse> successLiveData,
+                             MutableLiveData<String> errorMessage){
+        executeCall(userService.saveFcmToken(request), successLiveData, errorMessage);
+    }
+
+    public void deleteToken(Long userId, String deviceId,
+                            MutableLiveData<String> successLiveData,
+                            MutableLiveData<String> errorMessage) {
+        executeCall(userService.deleteToken(userId, deviceId), successLiveData, errorMessage);
     }
 }

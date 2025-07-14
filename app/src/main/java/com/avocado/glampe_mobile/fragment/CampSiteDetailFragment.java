@@ -1,5 +1,7 @@
 package com.avocado.glampe_mobile.fragment;
 
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -24,6 +27,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,11 +35,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.avocado.glampe_mobile.R;
+import com.avocado.glampe_mobile.activity.AuthActivity;
 import com.avocado.glampe_mobile.adapter.CampTypeAdapter;
 import com.avocado.glampe_mobile.adapter.ImageSliderAdapter;
 import com.avocado.glampe_mobile.adapter.SelectionAdapter;
 import com.avocado.glampe_mobile.adapter.UtilityAdapter;
 import com.avocado.glampe_mobile.di.AuthManager;
+import com.avocado.glampe_mobile.di.CampSiteCartManager;
+import com.avocado.glampe_mobile.di.DateHelper;
 import com.avocado.glampe_mobile.model.dto.booking.req.BookingRequest;
 import com.avocado.glampe_mobile.model.dto.bookingdetail.req.BookingDetailRequest;
 import com.avocado.glampe_mobile.model.dto.campsite.resp.CampSiteResponse;
@@ -45,8 +52,11 @@ import com.avocado.glampe_mobile.model.dto.selection.req.BookingSelectionRequest
 import com.avocado.glampe_mobile.model.dto.selection.resp.SelectionResponse;
 import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 import com.avocado.glampe_mobile.model.dto.utility.resp.UtilityResponse;
+import com.avocado.glampe_mobile.model.entity.CartItem;
 import com.avocado.glampe_mobile.model.entity.PriceFormat;
 import com.avocado.glampe_mobile.model.dto.camptype.resp.CampTypeResponse;
+import com.avocado.glampe_mobile.model.entity.SelectedAddon;
+import com.avocado.glampe_mobile.model.entity.SelectedCampType;
 import com.avocado.glampe_mobile.viewModel.BookingViewModel;
 import com.avocado.glampe_mobile.viewModel.CampSiteDetailViewModel;
 import com.avocado.glampe_mobile.viewModel.CampTypeViewModel;
@@ -76,11 +86,11 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
     ImageButton imageButton;
     NavController navController;
-    MaterialButton btnAbout, btnOption, btnReview, btnBookNow;
+    MaterialButton btnAbout, btnOption, btnReview, btnBookNow, btnChatOwner;
     List<MaterialButton> buttons;
     ViewFlipper viewFlipper;
     ShapeableImageView campSiteImage;
-    TextView tvCheckInDate, tvPricePerNight, tvAddOnTotal, tvTotal, tvDescription, tvCampSiteName, tvCampSiteAddress;
+    TextView tvCheckInDate, tvPricePerNight, tvAddOnTotal, tvTotal, tvDescription, tvCampSiteName, tvCampSiteAddress, tvOwnerName;
     LinearLayout layoutDate;
     LottieAnimationView loadingAnimation, loadingCampType;
     RecyclerView recyclerViewCampType, recyclerViewUtility, recyclerViewSelection;
@@ -100,7 +110,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
     private CampSiteResponse campSiteResponse;
     private Map<Long, Integer> selectedQuantity = new HashMap<>();
-    private Map<Integer, Integer> selectionSelectedQuantity = new HashMap<>();
+    private Map<Long, Integer> selectionSelectedQuantity = new HashMap<>();
     private CampTypeAdapter campTypeAdapter;
     private UtilityAdapter utilityAdapter;
     private SelectionAdapter selectionAdapter;
@@ -113,6 +123,17 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
     private Long campSiteId;
     private AuthUserResponse authUser;
+
+    private CampSiteCartManager cartManager;
+    private MaterialButton btnCart;
+
+    private boolean isDataReady = false;
+    private boolean shouldLoadSavedSelections = true;
+    private boolean savedSelectionsDataLoaded = false; // Track if data is loaded but adapters not ready
+
+    private Map<Long, Integer> pendingSavedCampTypes = new HashMap<>();
+    private Map<Long, Integer> pendingSavedSelections = new HashMap<>();
+
 
     @Nullable
     @Override
@@ -135,8 +156,13 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         fetchData();
         observeViewModel();
         mapView.onCreate(savedInstanceState);
-
         onClickListener();
+        initCartManager();
+    }
+
+    private void initCartManager() {
+        cartManager = CampSiteCartManager.getInstance(requireContext());
+        Log.d("CampSiteDetail", "🛒 Cart manager initialized");
     }
 
     private void getCampSiteId(){
@@ -145,9 +171,56 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         }
     }
 
+
+    private boolean isUserAuthenticated() {
+        // Option 1: Sử dụng AuthManager (recommend vì fragment đã dùng)
+        try {
+            AuthUserResponse authResponse = AuthManager.getAuthResponse(requireContext());
+            return authResponse != null && authResponse.getUser() != null;
+        } catch (Exception e) {
+            Log.e("CampSiteDetail", "Error checking auth", e);
+            return false;
+        }
+
+    }
+
+    // Method để show login required dialog
+    private void showLoginRequiredDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_login_required, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        MaterialButton btnLogin = dialogView.findViewById(R.id.btnLogin);
+        MaterialButton btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+        btnLogin.setOnClickListener(v -> {
+            dialog.dismiss();
+            // Navigate to AuthActivity
+            Intent intent = new Intent(requireContext(), AuthActivity.class);
+            startActivity(intent);
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+
+
     private void onClickListener(){
-        imageButton.setOnClickListener(v -> navController.popBackStack());
+        imageButton.setOnClickListener(v -> navController.navigate(R.id.campSiteFragment, null,
+                new NavOptions.Builder()
+                        .setPopUpTo(R.id.app_graph, true)
+                        .build()));
         btnBookNow.setOnClickListener(v -> {
+            if (!isUserAuthenticated()) {
+                showLoginRequiredDialog();
+                return;
+            }
             List<BookingDetailRequest> bookingDetailRequests = new ArrayList<>();
             List<BookingSelectionRequest> bookingSelectionRequests = new ArrayList<>();
 
@@ -180,8 +253,178 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
 
             Log.d("Booking Request", bookingRequest.toString());
         });
+        btnChatOwner.setOnClickListener(v -> {
+            if (!isUserAuthenticated()) {
+                showLoginRequiredDialog();
+                return;
+            }
+            Bundle bundle = new Bundle();
+            bundle.putLong("recipientId", campSiteResponse.getUser().getId());
+            bundle.putString("recipientName", campSiteResponse.getUser().getFirstName());
+            navController.navigate(R.id.action_campSiteDetailFragment_to_chatFragment, bundle);
+        });
+        btnCart.setOnClickListener(v -> {
+            Log.d("CampSiteDetail", "🛒 Cart button clicked");
+            saveCurrentSelectionsToCart();
+        });
     }
 
+    private void saveCurrentSelectionsToCart() {
+        if (campSiteResponse == null) {
+            Toast.makeText(requireContext(), "Dữ liệu địa điểm chưa sẵn sàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if we have dates selected
+        if (checkInDate == null || checkOutDate == null || totalNights <= 0) {
+            Toast.makeText(requireContext(), "Vui lòng chọn ngày cắm trại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if we have any selections
+        if (selectedQuantity.isEmpty() && selectionSelectedQuantity.isEmpty()) {
+            Toast.makeText(requireContext(), "Vui lòng chọn loại lều hoặc dịch vụ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            // Convert selected camp types
+            List<CampTypeResponse> selectedCampTypes = new ArrayList<>();
+            for (Map.Entry<Long, Integer> entry : selectedQuantity.entrySet()) {
+                Long campTypeId = entry.getKey();
+                Integer quantity = entry.getValue();
+
+                if (quantity > 0) {
+                    CampTypeResponse campType = campTypeResponses.stream()
+                            .filter(ct -> ct.getId().equals(campTypeId))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (campType != null) {
+                        // Create a copy with selected quantity
+                        CampTypeResponse copy = createCampTypeCopy(campType);
+                        copy.setSelectedQuantity(quantity);
+                        selectedCampTypes.add(copy);
+                    }
+                }
+            }
+
+            // Convert selected addons
+            List<SelectionResponse> selectedAddons = new ArrayList<>();
+            for (Map.Entry<Long, Integer> entry : selectionSelectedQuantity.entrySet()) {
+                Long selectionId = entry.getKey();
+                Integer quantity = entry.getValue();
+
+                if (quantity > 0) {
+                    SelectionResponse selection = campSiteResponse.getSelections().stream()
+                            .filter(s -> s.getId().equals(selectionId))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selection != null) {
+                        SelectionResponse copy = createSelectionCopy(selection);
+                        copy.setSelectedQuantity(quantity);
+                        selectedAddons.add(copy);
+                    }
+                }
+            }
+
+            // Convert dates to millis
+            Long checkInMillis = DateHelper.localDateToMillis(checkInDate);
+            Long checkOutMillis = DateHelper.localDateToMillis(checkOutDate);
+
+            // Get campsite image
+            String campsiteImage = null;
+            if (campSiteResponse.getGalleries() != null && !campSiteResponse.getGalleries().isEmpty()) {
+                campsiteImage = campSiteResponse.getGalleries().get(0).getPath();
+            }
+
+            // Save to cart using cart manager
+            cartManager.saveCurrentSelection(
+                    campSiteResponse.getId(),
+                    campSiteResponse.getName(),
+                    campsiteImage,
+                    campSiteResponse.getAddress(),
+                    checkInMillis,
+                    checkOutMillis,
+                    selectedCampTypes,
+                    selectedAddons
+            );
+
+            // Show success message with animation
+            Toast.makeText(requireContext(),
+                    "✅ Đã thêm " + campSiteResponse.getName() + " vào giỏ hàng",
+                    Toast.LENGTH_SHORT).show();
+
+            // Add visual feedback
+            animateCartButton();
+
+            Log.d("CampSiteDetail", "🛒 Successfully added to cart: " +
+                    selectedCampTypes.size() + " camp types, " +
+                    selectedAddons.size() + " add-ons, " +
+                    totalNights + " nights");
+
+        } catch (Exception e) {
+            Log.e("CampSiteDetail", "❌ Error adding to cart", e);
+            Toast.makeText(requireContext(), "Có lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private CampTypeResponse createCampTypeCopy(CampTypeResponse original) {
+        CampTypeResponse copy = new CampTypeResponse();
+        copy.setId(original.getId());
+        copy.setType(original.getType());
+        copy.setCapacity(original.getCapacity());
+        copy.setPrice(original.getPrice());
+        copy.setWeekendPrice(original.getWeekendPrice());
+        copy.setQuantity(original.getQuantity());
+        copy.setIsDeleted(original.getIsDeleted());
+        copy.setCampSiteId(original.getCampSiteId());
+        copy.setImage(original.getImage());
+        copy.setFacilities(original.getFacilities());
+        if (original.getWeekendPrice() != null) {
+            copy.setWeekendPrice(original.getWeekendPrice());
+        }
+        copy.setUpdatedAt(original.getUpdatedAt());
+        return copy;
+    }
+
+    private SelectionResponse createSelectionCopy(SelectionResponse original) {
+        SelectionResponse copy = new SelectionResponse();
+        copy.setId(original.getId());
+        copy.setName(original.getName());
+        copy.setDescription(original.getDescription());
+        copy.setPrice(original.getPrice());
+        copy.setImage(original.getImage());
+        copy.setIsDeleted(original.getIsDeleted());
+        return copy;
+    }
+
+    private void animateCartButton() {
+        // Scale and color animation
+        btnCart.animate()
+                .scaleX(1.1f).scaleY(1.1f)
+                .setDuration(150)
+                .withEndAction(() -> {
+                    btnCart.animate()
+                            .scaleX(1f).scaleY(1f)
+                            .setDuration(150);
+                });
+
+        // Temporary background color change
+        ColorStateList originalBg = btnCart.getBackgroundTintList();
+        ColorStateList originalIcon = btnCart.getIconTint();
+
+        // Change to success colors temporarily
+        btnCart.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.success));
+        btnCart.setIconTint(ContextCompat.getColorStateList(requireContext(), android.R.color.white));
+
+        // Revert after animation
+        btnCart.postDelayed(() -> {
+            btnCart.setBackgroundTintList(originalBg);
+            btnCart.setIconTint(originalIcon);
+        }, 500);
+    }
     private void initialize(View view){
         tvCampSiteName = view.findViewById(R.id.tvCampSiteName);
         tvCampSiteAddress = view.findViewById(R.id.tvCampSiteAddress);
@@ -215,6 +458,9 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
             tvPricePerNight.setText(PriceFormat.formatUsd(0.0));
             updateBtnState();
         }
+        tvOwnerName = view.findViewById(R.id.tvOwnerName);
+        btnChatOwner = view.findViewById(R.id.btnChatOwner);
+        btnCart = view.findViewById(R.id.btnCart);
     }
 
     private void initViewModels(){
@@ -230,7 +476,6 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     }
 
     private void observeViewModel(){
-
         campSiteDetailViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
                 loadingAnimation.setVisibility(View.VISIBLE);
@@ -244,18 +489,18 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
                 loadingAnimation.setVisibility(View.GONE);
                 mapView.getMapAsync(this);
                 updateView();
+
+                // Check and load saved selections after campsite data loaded
+                checkAndLoadSavedSelections();
             }
         });
     }
 
     private void observeCampTypeViewModel(){
-
         campTypeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
                 loadingCampType.setVisibility(View.VISIBLE);
                 recyclerViewCampType.setVisibility(View.GONE);
-            }else {
-                Log.d("CampType Loading: ", "NUll");
             }
         });
 
@@ -266,10 +511,20 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
                 loadingCampType.setVisibility(View.GONE);
                 setUpCampTypeAdapter();
                 setUpSelectionAdapter();
+
+                // Check and load saved selections after camp types loaded
+                applyPendingSavedSelections();
             }
         });
     }
 
+    private void checkAndLoadSavedSelections() {
+        if (shouldLoadSavedSelections && campSiteResponse != null) {
+            Log.d("CampSiteDetail", "🔄 All data ready, loading saved cart selections");
+            loadSavedCartSelections();
+            shouldLoadSavedSelections = false; // Prevent multiple loads
+        }
+    }
     private void observerAddBooking() {
         bookingViewModel.getIsLoadingAdd().observe(getViewLifecycleOwner(), isLoadingAdd -> {
             if (isLoadingAdd != null) {
@@ -309,6 +564,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         tvCampSiteAddress.setText(campSiteResponse.getAddress());
         tvDescription.setText(campSiteResponse.getDescription());
         nestedScrollView.setVisibility(View.VISIBLE);
+        tvOwnerName.setText(campSiteResponse.getUser().getFirstName());
     }
 
     private void setUpButtons() {
@@ -468,7 +724,7 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
             Map<Long, CampTypeResponse> campTypeMap = campTypeResponses.stream()
                     .collect(Collectors.toMap(CampTypeResponse::getId, Function.identity()));
 
-            Map<Integer, SelectionResponse> selectionMap = campSiteResponse.getSelections().stream()
+            Map<Long, SelectionResponse> selectionMap = campSiteResponse.getSelections().stream()
                             .collect(Collectors.toMap(SelectionResponse::getId, Function.identity()));
 
             selectedQuantity.forEach((key, value) -> {
@@ -528,6 +784,165 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
         }
     }
 
+    private void loadSavedCartSelections() {
+        if (campSiteResponse == null || cartManager == null) {
+            Log.w("CampSiteDetail", "⚠️ Cannot load saved selections - missing dependencies");
+            return;
+        }
+
+        try {
+            Log.d("CampSiteDetail", "🔄 Loading saved cart selections for campsite: " + campSiteResponse.getName());
+
+            // Get saved cart item for this campsite
+            CartItem savedItem = cartManager.getSavedSelection(campSiteResponse.getId());
+            if (savedItem == null) {
+                Log.d("CampSiteDetail", "📭 No saved selections found for this campsite");
+                return;
+            }
+
+            Log.d("CampSiteDetail", "🎯 Found saved cart item:");
+            Log.d("CampSiteDetail", "   - Camp types: " + savedItem.getSelectedCampTypes().size());
+            Log.d("CampSiteDetail", "   - Add-ons: " + savedItem.getSelectedAddons().size());
+
+            // 1. Load saved dates if available
+            if (savedItem.getCheckInDate() != null && savedItem.getCheckOutDate() != null) {
+                LocalDate savedCheckIn = DateHelper.millisToLocalDate(savedItem.getCheckInDate());
+                LocalDate savedCheckOut = DateHelper.millisToLocalDate(savedItem.getCheckOutDate());
+
+                if (savedCheckIn != null && savedCheckOut != null) {
+                    Log.d("CampSiteDetail", "📅 Restoring dates: " + savedCheckIn + " to " + savedCheckOut);
+
+                    // Set dates and calculate nights
+                    this.checkInDate = savedCheckIn;
+                    this.checkOutDate = savedCheckOut;
+                    this.totalNights = (int) ChronoUnit.DAYS.between(savedCheckIn, savedCheckOut);
+                    this.weekend = countWeekends(savedCheckIn, savedCheckOut);
+                    this.weekdays = this.totalNights - this.weekend;
+
+                    // Update date display
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy");
+                    String checkInDateStr = savedCheckIn.format(formatter);
+                    String checkOutDateStr = savedCheckOut.format(formatter);
+                    String dateRange = checkInDateStr + " - " + checkOutDateStr;
+                    tvCheckInDate.setText(dateRange);
+
+                    // Trigger camp types API call
+                    campTypeViewModel.fetchAllCampTypes(
+                            CampTypeFilterParams.builder()
+                                    .campSiteId(campSiteResponse.getId())
+                                    .checkInAt(savedCheckIn)
+                                    .checkOutAt(savedCheckOut)
+                                    .build()
+                    );
+                    observeCampTypeViewModel();
+                }
+            }
+
+            // 2. Store saved quantities for later application (when adapters are ready)
+            pendingSavedCampTypes.clear();
+            for (SelectedCampType savedCampType : savedItem.getSelectedCampTypes()) {
+                pendingSavedCampTypes.put(savedCampType.getCampTypeId(), savedCampType.getQuantity());
+                Log.d("CampSiteDetail", "   - Stored camp type " + savedCampType.getCampTypeId() +
+                        " with quantity " + savedCampType.getQuantity());
+            }
+
+            pendingSavedSelections.clear();
+            for (SelectedAddon savedAddon : savedItem.getSelectedAddons()) {
+                pendingSavedSelections.put(savedAddon.getSelectionId(), savedAddon.getQuantity());
+                Log.d("CampSiteDetail", "   - Stored add-on " + savedAddon.getSelectionId() +
+                        " with quantity " + savedAddon.getQuantity());
+            }
+
+            savedSelectionsDataLoaded = true;
+            Log.d("CampSiteDetail", "📦 Saved selections data stored, waiting for adapters...");
+
+        } catch (Exception e) {
+            Log.e("CampSiteDetail", "❌ Error loading saved cart selections", e);
+        }
+    }
+
+    private void updateAdaptersWithSavedSelections() {
+        try {
+            Log.d("CampSiteDetail", "Update saved camp types and selections");
+            if (campTypeAdapter != null && !selectedQuantity.isEmpty()) {
+                Log.d("CampSiteDetail", "🔄 Updating camp type adapter with saved quantities");
+                campTypeAdapter.applySavedQuantities(selectedQuantity);
+            } else {
+                Log.d("CampSiteDetail", campTypeAdapter == null ? "CampTypeAdapter is null" : "selectedQuanity is empty");
+            }
+
+            // Update selection adapter with restored quantities
+            if (selectionAdapter != null && !selectionSelectedQuantity.isEmpty()) {
+                Log.d("CampSiteDetail", "🔄 Updating selection adapter with saved quantities");
+                selectionAdapter.applySavedQuantities(selectionSelectedQuantity);
+            }
+
+            Log.d("CampSiteDetail", "✅ Adapters updated with saved selections");
+
+        } catch (Exception e) {
+            Log.e("CampSiteDetail", "❌ Error updating adapters with saved selections", e);
+        }
+    }
+
+    private void applyPendingSavedSelections() {
+        if (!savedSelectionsDataLoaded) {
+            Log.d("CampSiteDetail", "ℹ️ No pending saved selections to apply");
+            return;
+        }
+
+        Log.d("CampSiteDetail", "🔄 Applying pending saved selections to adapters");
+
+        try {
+            // Apply camp type quantities
+            if (campTypeAdapter != null && !pendingSavedCampTypes.isEmpty()) {
+                Log.d("CampSiteDetail", "🔄 Applying saved camp type quantities");
+
+                // Update internal maps
+                selectedQuantity.clear();
+                selectedQuantity.putAll(pendingSavedCampTypes);
+
+                // Update adapter
+                campTypeAdapter.applySavedQuantities(pendingSavedCampTypes);
+
+                Log.d("CampSiteDetail", "✅ Camp type quantities applied: " + pendingSavedCampTypes.size());
+            } else {
+                Log.w("CampSiteDetail", "⚠️ Cannot apply camp type quantities - adapter: " +
+                        (campTypeAdapter != null) + ", quantities: " + pendingSavedCampTypes.size());
+            }
+
+            // Apply selection quantities
+            if (selectionAdapter != null && !pendingSavedSelections.isEmpty()) {
+                Log.d("CampSiteDetail", "🔄 Applying saved selection quantities");
+
+                // Update internal maps
+                selectionSelectedQuantity.clear();
+                selectionSelectedQuantity.putAll(pendingSavedSelections);
+
+                // Update adapter
+                selectionAdapter.applySavedQuantities(pendingSavedSelections);
+
+                Log.d("CampSiteDetail", "✅ Selection quantities applied: " + pendingSavedSelections.size());
+            } else {
+                Log.w("CampSiteDetail", "⚠️ Cannot apply selection quantities - adapter: " +
+                        (selectionAdapter != null) + ", quantities: " + pendingSavedSelections.size());
+            }
+
+            // Update totals and button state
+            updateTotal();
+            updateBtnState();
+
+            // Clear pending data
+            pendingSavedCampTypes.clear();
+            pendingSavedSelections.clear();
+            savedSelectionsDataLoaded = false;
+
+            Log.d("CampSiteDetail", "✅ Successfully applied all pending saved selections");
+
+        } catch (Exception e) {
+            Log.e("CampSiteDetail", "❌ Error applying pending saved selections", e);
+        }
+    }
+
     public void setUpViewPager(){
         if (!campSiteResponse.getGalleries().isEmpty()) {
             List<String> urls = campSiteResponse.getGalleries().stream().map(GalleryResponse::getPath).collect(Collectors.toList());
@@ -559,6 +974,12 @@ public class CampSiteDetailFragment extends Fragment implements TripCalendarBott
     public void onPause() {
         if (mapView != null) mapView.onPause();
         super.onPause();
+
+        // Reset flag so selections can be loaded again next time
+        shouldLoadSavedSelections = true;
+        savedSelectionsDataLoaded = false;
+        pendingSavedCampTypes.clear();
+        pendingSavedSelections.clear();
     }
 
     @Override

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
+    android:fitsSystemWindows="true"
     >
 
     <LinearLayout
@@ -23,20 +24,23 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/back_button"
+            android:id="@+id/btnBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/back"
-            app:tint="@android:color/white" />
+            app:tint="@android:color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="12dp"
-            android:src="@drawable/ic_personal"
+            android:src="@drawable/avatar_place_holder"
             app:civ_border_color="@android:color/white"
             app:civ_border_width="2dp" />
 
@@ -47,7 +51,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/chat_name"
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/chat_name"
@@ -69,7 +73,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_messages"
+        android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -83,7 +87,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chat_header"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/item_message" />
+         />
 
     <LinearLayout
         android:id="@+id/message_input_container"
@@ -121,7 +125,7 @@
             app:cardBackgroundColor="#F5F5F5">
 
             <EditText
-                android:id="@+id/edit_message"
+                android:id="@+id/etText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -145,7 +149,7 @@
             app:cardElevation="2dp">
 
             <ImageButton
-                android:id="@+id/btn_send"
+                android:id="@+id/btnSend"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"

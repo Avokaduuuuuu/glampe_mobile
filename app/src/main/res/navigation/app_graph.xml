@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_campSiteFragment_to_campSiteDetailFragment"
             app:destination="@id/campSiteDetailFragment" />
+        <action
+            android:id="@+id/action_campSiteFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
     <fragment
         android:id="@+id/bookingFragment"
@@ -28,7 +31,11 @@
         android:id="@+id/inboxFragment"
         android:name="com.avocado.glampe_mobile.fragment.InboxFragment"
         android:label="InboxFragment"
-        tools:layout="@layout/fragment_inbox"/>
+        tools:layout="@layout/fragment_message_list">
+        <action
+            android:id="@+id/action_inboxFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.avocado.glampe_mobile.fragment.ProfileFragment"
@@ -51,6 +58,9 @@
         <action
             android:id="@+id/action_campSiteDetailFragment_to_bookingDetailFragment"
             app:destination="@id/bookingDetailFragment" />
+        <action
+            android:id="@+id/action_campSiteDetailFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/bookingDetailFragment"
@@ -79,4 +89,18 @@
         android:name="com.avocado.glampe_mobile.fragment.PaymentFailFragment"
         android:label="PaymentFailFragment"
         tools:layout="@layout/fragment_payment_fail"/>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.avocado.glampe_mobile.fragment.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_inbox"/>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.avocado.glampe_mobile.fragment.CartFragment"
+        android:label="CartFragment"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cartFragment_to_campSiteDetailFragment"
+            app:destination="@id/campSiteDetailFragment" />
+    </fragment>
 </navigation>

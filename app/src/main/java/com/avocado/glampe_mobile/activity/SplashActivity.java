@@ -7,15 +7,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.avocado.glampe_mobile.R;
+import com.avocado.glampe_mobile.di.AuthManager;
+import com.avocado.glampe_mobile.model.dto.user.resp.AuthUserResponse;
 
 public class SplashActivity extends AppCompatActivity {
+
+    AuthUserResponse user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        user = AuthManager.getAuthResponse(this);
+        if (user != null) {
+            navigateToMain();
+        } else {
+            navigateToAuth();
+        }
 
-        navigateToAuth();
     }
 
     private void navigateToMain() {

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -33,15 +34,114 @@
             android:gravity="center_horizontal">
 
 
-            <!-- Optional header content -->
-            <TextView
-                android:id="@+id/tvHeader"
+            <LinearLayout
+                android:id="@+id/searchBarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Camp Sites"
-                android:textSize="24sp"
-                android:padding="16dp"
-                android:visibility="gone" />
+                android:layout_centerInParent="true"
+                android:background="@drawable/search_bar_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:padding="14dp"
+                android:elevation="4dp"
+                android:layout_margin="15dp"
+                android:gravity="center_vertical">
+
+                <!-- Search Icon -->
+                <ImageView
+                    android:id="@+id/searchIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_search"
+                    android:contentDescription="Search" />
+
+                <!-- Text Container -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- Main Text -->
+                    <TextView
+                        android:id="@+id/mainText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Where to?"
+                        android:textColor="#222222"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Cart Button with Badge -->
+                <FrameLayout
+                    android:id="@+id/cartButtonContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp">
+
+                    <ImageView
+                        android:id="@+id/cartIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_shopping_cart"
+                        android:contentDescription="Cart" />
+
+                    <!-- Cart Badge -->
+                    <TextView
+                        android:id="@+id/cartBadge"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:text="3"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:background="@drawable/circle_red_background"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-4dp"
+                        android:layout_marginEnd="-4dp"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <!-- RecyclerView for categories -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlaceTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+
+                <!-- Divider line -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"

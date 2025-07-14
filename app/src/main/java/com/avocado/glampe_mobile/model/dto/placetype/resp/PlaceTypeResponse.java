@@ -13,8 +13,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlaceTypeResponse {
-    Integer id;
+    Long id;
     String name;
-    String imagePath;
+    String image;
     Boolean status;
+    @Builder.Default
+    Boolean selected = false;
 }

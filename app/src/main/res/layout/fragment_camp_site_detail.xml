@@ -228,6 +228,168 @@
                                 android:background="@drawable/border_background"/>
                         </LinearLayout>
 
+                        <!-- ─────── Owner info & chat button ───────────────────────── -->
+                        <LinearLayout
+                            android:id="@+id/layoutOwner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/border_layout"
+                            android:padding="15dp"
+                            android:layout_marginTop="10dp">
+
+                            <!-- Owner avatar -->
+                            <ImageView
+                                android:id="@+id/imgOwnerAvatar"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:src="@drawable/avatar_place_holder"
+                                android:scaleType="centerCrop"
+                                android:clipToOutline="true" />
+
+                            <!-- Name & rating -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvOwnerName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="John Doe"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+
+                            </LinearLayout>
+
+                            <!-- Chat button -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnChatOwner"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="Chat"
+                                android:textAllCaps="false"
+                                android:textColor="@android:color/white"
+                                android:backgroundTint="@color/primary_color"
+                                app:cornerRadius="20dp"
+                                android:paddingHorizontal="20dp"
+                                android:drawableStart="@drawable/ic_message"
+                               />
+                        </LinearLayout>
+                        <!-- ─────────────────────────────────────────────────────────── -->
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutOption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/date_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_layout"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Date"
+                                android:textSize="14sp"
+                                android:textColor="#888888" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/check_in_date"
+                                android:text="16 Jan, 2025"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#000000" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/loadingCampType"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_fileName="loading.json"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutCampType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <!-- Label for Camp Types -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Choose Camp Type"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:paddingVertical="8dp"
+                                android:textColor="#000000" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewCampType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#CCCCCC"
+                                android:layout_marginVertical="12dp" />
+
+                            <!-- Label for Selections -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add-on Options"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:paddingVertical="8dp"
+                                android:textColor="#000000" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewSelection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutReview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -351,109 +513,6 @@
 
                         </LinearLayout>
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layoutOption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:id="@+id/date_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="70dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/border_layout"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Date"
-                                android:textSize="14sp"
-                                android:textColor="#888888" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/check_in_date"
-                                android:text="16 Jan, 2025"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#000000" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center">
-                            <com.airbnb.lottie.LottieAnimationView
-                                android:id="@+id/loadingCampType"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                app:lottie_autoPlay="true"
-                                app:lottie_loop="true"
-                                app:lottie_fileName="loading.json"
-                                android:visibility="gone"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layoutCampType"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <!-- Label for Camp Types -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Choose Camp Type"
-                                android:textStyle="bold"
-                                android:textSize="16sp"
-                                android:paddingVertical="8dp"
-                                android:textColor="#000000" />
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerViewCampType"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <!-- Divider -->
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:background="#CCCCCC"
-                                android:layout_marginVertical="12dp" />
-
-                            <!-- Label for Selections -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Add-on Options"
-                                android:textStyle="bold"
-                                android:textSize="16sp"
-                                android:paddingVertical="8dp"
-                                android:textColor="#000000" />
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerViewSelection"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layoutReview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                    </LinearLayout>
                 </ViewFlipper>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -466,7 +525,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/booking_section_bg"
         android:orientation="horizontal"
-        android:padding="20dp"
+        android:padding="10dp"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -478,7 +537,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:orientation="vertical">
 
             <!-- Price per night -->
@@ -557,19 +616,51 @@
         </LinearLayout>
 
         <!-- Book Now Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBookNow"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:text="Book Now!"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#3F52B4"
-            app:cornerRadius="28dp"
-            android:paddingHorizontal="32dp"
-            android:layout_marginStart="16dp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBookNow"
+                android:layout_weight="7.5"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:text="Book Now!"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/primary_color"
+                app:cornerRadius="28dp"
+                android:paddingHorizontal="32dp"
+                android:layout_marginStart="16dp"
+                android:elevation="4dp"/>
+
+            <!-- Cart Icon Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCart"
+                android:layout_weight="2.5"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:text=""
+                android:contentDescription="Add to cart"
+                android:backgroundTint="@color/white"
+                app:cornerRadius="28dp"
+                app:icon="@drawable/ic_shopping_cart"
+                app:iconGravity="textStart"
+                app:iconTint="@color/primary_color"
+                app:iconSize="24dp"
+                android:layout_marginStart="8dp"
+                android:paddingHorizontal="16dp"
+                app:iconPadding="0dp"
+                android:gravity="center"
+                android:elevation="4dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <FrameLayout

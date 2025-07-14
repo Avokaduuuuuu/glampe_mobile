@@ -1,10 +1,12 @@
 package com.avocado.glampe_mobile.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.avocado.glampe_mobile.R;
+import com.avocado.glampe_mobile.activity.AuthActivity;
 import com.avocado.glampe_mobile.adapter.BookingAdapter;
 import com.avocado.glampe_mobile.di.AuthManager;
 import com.avocado.glampe_mobile.model.dto.booking.filter.BookingFilterParams;
@@ -44,8 +47,9 @@ public class BookingFragment extends Fragment {
     CardView cardView;
     NavController navController;
 
-    MaterialButton btnActive, btnCompleted, btnCanceled;
+    MaterialButton btnActive, btnCompleted, btnCanceled, btnLogin;
     List<MaterialButton> btns;
+    LinearLayout loginRequiredContainer;
 
     private List<BookingResponse> bookings = new ArrayList<>();
 
@@ -67,18 +71,36 @@ public class BookingFragment extends Fragment {
         btnActive = view.findViewById(R.id.btnActive);
         btnCompleted = view.findViewById(R.id.btnCompleted);
         btnCanceled = view.findViewById(R.id.btnCancled);
+        btnLogin = view.findViewById(R.id.btnLogin);
+        loginRequiredContainer = view.findViewById(R.id.loginRequiredContainer);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initView(view);
-        initViewModel();
-        observeFetchBookings();
-        setUpScrollView();
-        setUpButtons();
 
-        btnActive.performClick();
+        initView(view);
+
+
+        if (user != null) {
+            initViewModel();
+            observeFetchBookings();
+            setUpScrollView();
+            setUpButtons();
+            btnActive.performClick();
+        } else {
+            displayLoginRequire();
+        }
+
+
+    }
+
+    private void displayLoginRequire() {
+        loginRequiredContainer.setVisibility(View.VISIBLE);
+        btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AuthActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initViewModel(){
